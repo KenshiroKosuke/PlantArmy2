@@ -1,6 +1,7 @@
 package application;
 import java.util.Random;
 
+import entity.ConeZombie;
 import entity.NormalZombie;
 import entity.base.Zombie;
 import javafx.application.Platform;
@@ -72,7 +73,7 @@ public class NormalMode extends AnchorPane {
 					//75+98*(int) Math.ceil(special)
 					initalizeNewZombie(i, zombie);
 				} else if (special < rarer) {
-					NormalZombie zombie = new NormalZombie();
+					ConeZombie zombie = new ConeZombie();
 					initalizeNewZombie(i, zombie);
 				} else if (special < rarest) {
 					NormalZombie zombie = new NormalZombie();

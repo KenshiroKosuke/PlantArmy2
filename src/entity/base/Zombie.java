@@ -13,7 +13,7 @@ import javafx.util.Duration;
 
 public abstract class Zombie {
 	private int hp, speed, coinDrop, x, y, roll;
-	private static String name;
+	private String name;
 	//public static Random random = new Random();
 	ImageView imageView;
 	boolean isDead;
@@ -30,6 +30,7 @@ public abstract class Zombie {
 	}
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
+	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -48,6 +49,7 @@ public abstract class Zombie {
 		else {
 			switch(name) {
 			case "NormalZombie" : imageView = new ImageView(IMAGE_NORMAL_ZOMBIE); break	;
+			case "ConeZombie"	: imageView = new ImageView(IMAGE_CONE_ZOMBIE); break	;
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
