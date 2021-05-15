@@ -89,8 +89,11 @@ public class NormalMode extends AnchorPane {
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
-		zombie.setX((int) (1.3*(Main.getWidth()+1.2*code*FieldPane.getFieldWidth()/9))); //1032-81*i
-		zombie.setY((int) (22+(row*FieldPane.getFieldHeight())/5));
+		zombie.setX((int) ((Main.getWidth()+1.2*code*FieldPane.getFieldWidth()/9))); //1032-81*i
+		if (zombie.getName() ==  "NormalZombie")
+			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
+		else if (zombie.getName() == "ConeZombie")
+			zombie.setY((int) (5+(row*FieldPane.getFieldHeight())/5));
 		zombie.setRoll(row);
 		Thread thread = new Thread(new Runnable(){
 			@Override
@@ -129,7 +132,7 @@ public class NormalMode extends AnchorPane {
 	public void drawZombie(Zombie zombie) {
 		ImageView zombieImageView = zombie.getImageView();
         this.getChildren().remove(zombieImageView);
-        zombieImageView.setFitHeight(140);
+        zombieImageView.setFitHeight(zombie.getHeight());
         //zombieImageView.setFitWidth(100);
         zombieImageView.setPreserveRatio(true);
         zombieImageView.relocate((double)(zombie.getX()), (double)(zombie.getY()));

@@ -13,6 +13,7 @@ import javafx.util.Duration;
 
 public abstract class Zombie {
 	private int hp, speed, coinDrop, x, y, roll;
+	private double height;
 	private String name;
 	//public static Random random = new Random();
 	ImageView imageView;
@@ -48,13 +49,13 @@ public abstract class Zombie {
 		}
 		else {
 			switch(name) {
-			case "NormalZombie" : imageView = new ImageView(IMAGE_NORMAL_ZOMBIE); break	;
-			case "ConeZombie"	: imageView = new ImageView(IMAGE_CONE_ZOMBIE); break	;
+			case "NormalZombie" : imageView = new ImageView(IMAGE_NORMAL_ZOMBIE); height=130; break	;
+			case "ConeZombie"	: imageView = new ImageView(IMAGE_CONE_ZOMBIE); height = 160; break	;
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
 		//imageView.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
-		imageView.relocate((double)(getX()), (double)(getY()));
+		//imageView.relocate((double)(getX()), (double)(getY()));
 		
 
 	}
@@ -73,6 +74,14 @@ public abstract class Zombie {
 
 	public void setHp(int hp) {
 		this.hp = hp;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
 	}
 
 	public int getSpeed() {
@@ -105,6 +114,14 @@ public abstract class Zombie {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public boolean isDead() {
