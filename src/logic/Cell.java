@@ -62,8 +62,8 @@ public class Cell extends Pane {
 			} else if (myPlant == null) {
 				myPlant = selectedPlant;
 				ShopController.boughtPlant();
+				
 				changePlant(new Pea());
-
 			}
 		}
 	}

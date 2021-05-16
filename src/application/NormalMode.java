@@ -19,15 +19,16 @@ import logic.ShopPane;
 
 public class NormalMode extends AnchorPane {
 	private Random rand = new Random();
-	
+	private static FieldPane field;
+	private static ShopPane shop;
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
 		BackgroundSize bgSize = new BackgroundSize(Main.getWidth(),Main.getHeight(),false,false,false,false);
 		BackgroundImage bgImg = new BackgroundImage(img, null, null, null, bgSize);
 		BackgroundImage[] bgImgA = {bgImg};
-		FieldPane field = new FieldPane();
-		ShopPane shop = new ShopPane();
+		field = new FieldPane();
+		shop = new ShopPane();
 		this.setBackground(new Background(null,bgImgA));
 		this.getChildren().add(field);
 		this.getChildren().add(shop);
@@ -94,7 +95,7 @@ public class NormalMode extends AnchorPane {
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
 			zombie.setY((int) (5+(row*FieldPane.getFieldHeight())/5));
-		zombie.setRoll(row);
+		zombie.setRow(row);
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
@@ -137,5 +138,9 @@ public class NormalMode extends AnchorPane {
         zombieImageView.setPreserveRatio(true);
         zombieImageView.relocate((double)(zombie.getX()), (double)(zombie.getY()));
         this.getChildren().add(zombieImageView);
+	}
+
+	public static FieldPane getField() {
+		return field;
 	}
 }

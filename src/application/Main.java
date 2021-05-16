@@ -115,4 +115,8 @@ public class Main extends Application{
 			
 		}
 
+	public static Scene getNormalModeScene() {
+		return normalModeScene;
+	}
+
 }
