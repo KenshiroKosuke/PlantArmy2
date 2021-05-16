@@ -9,7 +9,8 @@ public abstract class Plant {
 	public Plant(int hp, String plantName) {
 		this.hp = hp;
 		switch(plantName) {
-		case "Pea" :		url = "PEA0.gif";	price = 100 ; name ="Peashooter"; 	break;
+		case "Pea" :		url = "PeaShooter_Idle.gif"		;	price = 100 ; name ="Peashooter"; 	break;
+		case "Sunflower" :	url = "Sunflower.gif"	;	price = 50	; name ="Sunflower"; 	break;
 		default : 			url = ".png"; 	;
 		}
 	}
@@ -36,6 +37,22 @@ public abstract class Plant {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 }

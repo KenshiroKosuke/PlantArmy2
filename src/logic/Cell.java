@@ -2,7 +2,8 @@ package logic;
 
 import java.util.Random;
 
-import entity.Pea;
+import entity.Peashooter;
+import entity.base.Pea;
 import entity.base.Plant;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -62,7 +63,18 @@ public class Cell extends Pane {
 			} else if (myPlant == null) {
 				myPlant = selectedPlant;
 				ShopController.boughtPlant();
-				changePlant(new Pea());
+				
+				Peashooter peashooter = new Peashooter();
+				peashooter.setX(FieldPane.getColumnIndex(this));
+				peashooter.setY(FieldPane.getRowIndex(this));
+				//if type shooter
+				for(int i=0;i<peashooter.getAmmo();i++) {
+					peashooter.getPeaList().add(new Pea(peashooter.getX(),peashooter.getY()));
+				}
+				peashooter.startShooting(); //ź
+				changePlant(peashooter);
+				//if type shooter
+				GameController.getShooters().add(peashooter);
 			}
 		}
 	}
@@ -117,6 +129,7 @@ public class Cell extends Pane {
 		});
 		
 	}
+
 	
 	
 }

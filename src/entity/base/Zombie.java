@@ -7,6 +7,7 @@ import application.NormalMode;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.animation.Transition;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -16,14 +17,17 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 import logic.Cell;
 import logic.FieldPane;
+import logic.GameController;
 
 public abstract class Zombie {
-	private int hp, speed, coinDrop, x, y, roll;
+	private int hp, speed, coinDrop, x, y, row;
 	private double height;
 	private String name;
+	private boolean isEating = false;
 	//public static Random random = new Random();
-	ImageView imageView;
+	private ImageView imageView;
 	boolean isDead;
+	private Cell eatingCell;
 	
 
 	public Zombie(int hp, int speed, int coinDrop, String zombieName) {
@@ -73,18 +77,21 @@ public abstract class Zombie {
 		ObservableList<Node> childrens = fieldPane.getChildren();
 		int xPos = this.checkGridXPosition();
 		if(xPos<9) {
-		Cell thisCell = (Cell) childrens.get(this.roll*9+xPos);
+		Cell thisCell = (Cell) childrens.get(this.row*9+xPos);
 		Cell nextCell;
 		if(xPos!=0) {
-			nextCell = (Cell) childrens.get(this.roll*9+xPos -1);
+			nextCell = (Cell) childrens.get(this.row*9+xPos -1);
 		}else {
 			nextCell = null;
 		}
 		if(!thisCell.isEmpty()) {
+			eatingCell = thisCell;
 	        return 1;
 	    }else if(nextCell!=null) {
-	    	if(! nextCell.isEmpty())
-	    	return 2;
+	    	if(! nextCell.isEmpty()) {
+	    		eatingCell = nextCell;
+	    		return 2;
+	    	}
 	    }
 		//0 = no plant
 		//1 = plant in this cell
@@ -93,6 +100,7 @@ public abstract class Zombie {
 		}
 		return 0;
 	}
+
 	public ImageView getImageView() {
 		return imageView;
 	}
@@ -172,11 +180,13 @@ public abstract class Zombie {
 			if(CheckPlantCollision()==1) {
 				//call eat method
 				System.out.println(CheckPlantCollision());
-
+				if(!isEating)
+					eat();
 			}else if(CheckPlantCollision()==2) {
 				if(((int)(this.x-(Main.getWidth()+this.checkGridXPosition()*FieldPane.getFieldWidth()/9)))==0) {
 					//call eat method
-					
+					if(!isEating)
+						eat();
 				}else {
 					this.x -= this.speed;
 				}
@@ -187,13 +197,50 @@ public abstract class Zombie {
 			}
 		}
 	}
-
-	public int getRoll() {
-		return roll;
+	
+	public void eat() {
+		isEating = true;
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				try {		
+					while(eatingCell.getMyPlant()!=null) {
+						Thread.sleep(400);
+						Thread thread = new Thread(()->{
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									if(eatingCell.getMyPlant()!=null) {
+										if(eatingCell.getMyPlant().getHp()>0) {
+											eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
+											//ź
+											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));	
+										}else {
+										eatingCell.removePlant();
+										isEating=false;
+										}
+									}
+								}
+							});
+						});
+						thread.start();				
+						/*========================================================*/	
+					}
+				} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				}	
+			}
+		});
+		thread.start();		
 	}
 
-	public void setRoll(int roll) {
-		this.roll = roll;
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
 	}
 	
 }

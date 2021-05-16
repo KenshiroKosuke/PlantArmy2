@@ -3,6 +3,8 @@ import java.util.Random;
 
 import entity.ConeZombie;
 import entity.NormalZombie;
+import entity.base.Pea;
+import entity.base.Shooter;
 import entity.base.Zombie;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -35,7 +37,7 @@ public class NormalMode extends AnchorPane {
 		this.setRightAnchor(field, 30.0);
 		this.setTopAnchor(field, 75.0);
 		populateZombie();
-		
+		ammoReposition();
 	}
 	
 	public void populateZombie() {
@@ -95,7 +97,7 @@ public class NormalMode extends AnchorPane {
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
 			zombie.setY((int) (5+(row*FieldPane.getFieldHeight())/5));
-		zombie.setRoll(row);
+		zombie.setRow(row);
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
@@ -142,5 +144,40 @@ public class NormalMode extends AnchorPane {
 
 	public static FieldPane getField() {
 		return field;
+	}
+	public void ammoReposition() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(50);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								drawPea();
+							}
+						});
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
+	}
+	public void drawPea() {
+		for(Shooter shooter : GameController.getShooters()) {
+			for(Pea pea : shooter.getPeaList()) {
+				ImageView peaImage = pea.getPeaImageView();
+				this.getChildren().remove(peaImage);
+		        //peaImage.setFitHeight(zombie.getHeight());
+		        //peaImage.setPreserveRatio(true);
+		        peaImage.relocate((double)(pea.getX()), (double)(pea.getY()));
+		        this.getChildren().add(peaImage);
+			}
+		}
+		
 	}
 }

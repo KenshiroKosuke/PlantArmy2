@@ -1,5 +1,7 @@
 package logic;
 import java.util.ArrayList;
+
+import entity.base.Shooter;
 import entity.base.Zombie;
 
 public class GameController {
@@ -8,6 +10,7 @@ public class GameController {
 	private static int moneyCount = 150;
 	private static boolean is_win = false;
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
+	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
 	private static int money;
 	
 	public static int getGameMode() {
@@ -45,6 +48,12 @@ public class GameController {
 	}
 	public static void setMoney(int money) {
 		GameController.money = money;
+	}
+	public static ArrayList<Shooter> getShooters() {
+		return shooters;
+	}
+	public static void setShooters(ArrayList<Shooter> shooters) {
+		GameController.shooters = shooters;
 	}
 	
 	

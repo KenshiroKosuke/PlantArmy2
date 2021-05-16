@@ -1,15 +1,16 @@
 package entity;
 
 import entity.base.Plant;
+import entity.base.Shooter;
 import entity.base.Upgradeable;
 
-public class Pea extends Plant implements Upgradeable {
+public class Peashooter extends Shooter implements Upgradeable {
 	
 	private int fireRate;
 	private int atk;
 
-	public Pea() {
-		super(20,"Pea");
+	public Peashooter() {
+		super(10,"Pea",1);
 		this.fireRate = 1300;
 		this.atk = 5;
 	}
