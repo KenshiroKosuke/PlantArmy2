@@ -2,7 +2,7 @@ package entity.base;
 
 public abstract class Plant {
 	private int hp;
-	private String url;
+	//private String url;
 	private int x,y;
 	private int price; 
 	private String name;
@@ -10,14 +10,12 @@ public abstract class Plant {
 	public Plant(int hp, String plantName) {
 		this.hp = hp;
 		switch(plantName) {
-		case "PeaShooter" :		url = "PeaShooter_Idle.gif"		;	price = 100 ; name ="PeaShooter"; 	break;
-		case "Sunflower" :		url = "Sunflower_Idle.gif"		;	price = 50	; name ="Sunflower"; 	break;
-		default : 				url = ".png"; 	;
+		case "PeaShooter" :		price = 100 ; name ="PeaShooter"; 	break;
+		case "Sunflower" :		price = 50	; name ="Sunflower"; 	break;
+		case "SnowPeaShooter" :	price = 175 ; name ="SnowPeaShooter"; 	break;
+		
+		default : 				name = "Logo"; 	;
 		}
-	}
-	
-	public String getUrl() {
-		return url;
 	}
 
 	public int getHp() {
@@ -54,6 +52,10 @@ public abstract class Plant {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public String getUrl() {
+		return name+".gif";
 	}
 
 }

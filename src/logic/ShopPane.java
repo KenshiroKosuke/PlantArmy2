@@ -14,8 +14,11 @@ public class ShopPane extends GridPane{
 	public ShopPane() {
 		this.setAlignment(Pos.CENTER);
 		this.setHgap(10);
-		this.setVgap(10);
-		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"), new BuyPlantButton("Sunflower"));
+		this.setVgap(0);
+		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"),
+								  new BuyPlantButton("Sunflower"),
+								  new BuyPlantButton("SnowPeaShooter")
+								  );
 		//add other plants here
 		int i = 0;
 		for (BuyPlantButton button : buyPlantButtonList) {
@@ -23,7 +26,17 @@ public class ShopPane extends GridPane{
 				@Override
 				public void handle(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					if (ShopController.getSun() >= button.getPlant().getPrice()) {
+					if (ShopController.getSelectedButton() != null) {
+						if (ShopController.getSelectedButton().getPlant() == button.getPlant()) {
+							System.out.println("unselect");
+							ShopController.getSelectedButton().unhighlight();
+							ShopController.setSelectedButton(null);
+						} else {
+							System.out.println("swap button");
+							setSelectedButton(button);
+						}
+					} else if (ShopController.getSun() >= button.getPlant().getPrice()) {
+						System.out.println("set new button");
 						setSelectedButton(button);
 					}
 				}

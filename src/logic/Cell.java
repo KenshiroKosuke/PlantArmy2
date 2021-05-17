@@ -3,6 +3,7 @@ package logic;
 import java.util.Random;
 
 import entity.PeaShooter;
+import entity.SnowPeaShooter;
 import entity.Sunflower;
 import entity.base.Pea;
 import entity.base.Plant;
@@ -68,7 +69,9 @@ public class Cell extends Pane {
 					myPlant = new PeaShooter();
 				} else if (selectedPlant.getName() == "Sunflower") {
 					myPlant = new Sunflower();
-				} 
+				} else if (selectedPlant.getName() == "SnowPeaShooter") {
+					myPlant = new SnowPeaShooter();
+				}
 				myPlant.setX(FieldPane.getColumnIndex(this));
 				myPlant.setY(FieldPane.getRowIndex(this));
 				//if type shooter
@@ -83,6 +86,17 @@ public class Cell extends Pane {
 			}
 		}
 	}
+	
+	public void changePlant(Plant myPlant) {
+		this.myPlant = myPlant;
+		String image_path = ClassLoader.getSystemResource(myPlant.getUrl()).toString();
+		Image img = new Image(image_path);
+		BackgroundSize bgSize = new BackgroundSize(this.getPrefWidth(),this.getPrefHeight(),false,false,false,false);
+		BackgroundImage bgImg = new BackgroundImage(img, null, null,BackgroundPosition.CENTER, bgSize);
+		BackgroundImage[] bgImgA = {bgImg};
+		this.setBackground(new Background(null,bgImgA));
+	}
+	
 	public boolean setPlant(Plant e) {
 		if(isEmpty()) {
 			changePlant(e);
@@ -101,16 +115,6 @@ public class Cell extends Pane {
 
 	public Plant getMyPlant() {
 		return myPlant;
-	}
-
-	public void changePlant(Plant myPlant) {
-		this.myPlant = myPlant;
-		String image_path = ClassLoader.getSystemResource(myPlant.getUrl()).toString();
-		Image img = new Image(image_path);
-		BackgroundSize bgSize = new BackgroundSize(this.getPrefWidth(),this.getPrefHeight(),false,false,false,false);
-		BackgroundImage bgImg = new BackgroundImage(img, null, null,BackgroundPosition.CENTER, bgSize);
-		BackgroundImage[] bgImgA = {bgImg};
-		this.setBackground(new Background(null,bgImgA));
 	}
 
 	public void removePlant() {
