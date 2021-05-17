@@ -4,6 +4,7 @@ import java.util.Random;
 
 import application.Main;
 import application.NormalMode;
+import entity.Walnut;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.animation.Transition;
@@ -225,8 +226,13 @@ public abstract class Zombie {
 									if(eatingCell.getMyPlant()!=null) {
 										if(eatingCell.getMyPlant().getHp()>0) {
 											eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
-											//ź
-											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));	
+											//////////////////////////////////////////////////////////////
+											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
+											//////////////////////////////////////////////////////////////
+											if (eatingCell.getMyPlant() instanceof Walnut && eatingCell.getMyPlant().getHp()==20) {
+												//eatingCell.getMyPlant()
+												eatingCell.changeGraphicPlant("Walnut_Half.gif");
+											}
 										}else {
 										if(eatingCell.getMyPlant() instanceof Shooter) {
 											for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {

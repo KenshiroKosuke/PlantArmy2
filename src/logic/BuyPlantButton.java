@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import entity.PeaShooter;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
+import entity.Walnut;
 import entity.base.Plant;
 public class BuyPlantButton extends Button {
 	private Plant plant;
@@ -25,10 +26,11 @@ public class BuyPlantButton extends Button {
 	public BuyPlantButton(String plantName) {
 		super();
 		switch(plantName) {
-		case "PeaShooter": 		this.plant = new PeaShooter();	break;
-		case "Sunflower" : 		this.plant = new Sunflower(); 	break;
+		case "PeaShooter": 		this.plant = new PeaShooter();		break;
+		case "Sunflower" : 		this.plant = new Sunflower(); 		break;
 		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	break;
-		default			 : 		this.plant = null;				break;
+		case "Walnut":			this.plant = new Walnut();			break;
+		default			 : 		this.plant = null;					break;
 		}
 		//this.setPrefHeight(100);
 		//this.setPrefWidth(200);

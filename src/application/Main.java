@@ -114,4 +114,12 @@ public class Main extends Application{
 		return normalModeScene;
 	}
 
+	public static Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public static void setPrimaryStage(Stage primaryStage) {
+		Main.primaryStage = primaryStage;
+	}
+
 }

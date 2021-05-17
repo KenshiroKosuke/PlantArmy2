@@ -10,9 +10,10 @@ public abstract class Plant {
 	public Plant(int hp, String plantName) {
 		this.hp = hp;
 		switch(plantName) {
-		case "PeaShooter" :		price = 100 ; name ="PeaShooter"; 	break;
-		case "Sunflower" :		price = 50	; name ="Sunflower"; 	break;
+		case "PeaShooter" :		price = 100 ; name ="PeaShooter"; 		break;
+		case "Sunflower" :		price = 50	; name ="Sunflower"; 		break;
 		case "SnowPeaShooter" :	price = 175 ; name ="SnowPeaShooter"; 	break;
+		case "Walnut" :			price = 50	; name ="Walnut";			break;
 		
 		default : 				name = "Logo"; 	;
 		}
@@ -55,6 +56,8 @@ public abstract class Plant {
 	}
 
 	public String getUrl() {
+		if (this.name == "Walnut")
+			return name+"_Full.gif";
 		return name+".gif";
 	}
 

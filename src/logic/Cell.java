@@ -5,6 +5,7 @@ import java.util.Random;
 import entity.PeaShooter;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
+import entity.Walnut;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
@@ -71,6 +72,8 @@ public class Cell extends Pane {
 					myPlant = new Sunflower();
 				} else if (selectedPlant.getName() == "SnowPeaShooter") {
 					myPlant = new SnowPeaShooter();
+				} else if (selectedPlant.getName() == "Walnut") {
+					myPlant = new Walnut();
 				}
 				myPlant.setX(FieldPane.getColumnIndex(this));
 				myPlant.setY(FieldPane.getRowIndex(this));
@@ -88,13 +91,10 @@ public class Cell extends Pane {
 	}
 	
 	public void changePlant(Plant myPlant) {
+		//call this to set plant
 		this.myPlant = myPlant;
 		String image_path = ClassLoader.getSystemResource(myPlant.getUrl()).toString();
-		Image img = new Image(image_path);
-		BackgroundSize bgSize = new BackgroundSize(this.getPrefWidth(),this.getPrefHeight(),false,false,false,false);
-		BackgroundImage bgImg = new BackgroundImage(img, null, null,BackgroundPosition.CENTER, bgSize);
-		BackgroundImage[] bgImgA = {bgImg};
-		this.setBackground(new Background(null,bgImgA));
+		changeGraphicPlant(image_path);
 	}
 	
 	public boolean setPlant(Plant e) {
@@ -104,6 +104,15 @@ public class Cell extends Pane {
 		}else {
 			return false;
 		}
+	}
+	
+	public void changeGraphicPlant(String image_path) {
+		//call this to set graphic and do nothing to the actual plant of this cell
+		Image img = new Image(image_path);
+		BackgroundSize bgSize = new BackgroundSize(this.getPrefWidth(),this.getPrefHeight(),false,false,false,false);
+		BackgroundImage bgImg = new BackgroundImage(img, null, null,BackgroundPosition.CENTER, bgSize);
+		BackgroundImage[] bgImgA = {bgImg};
+		this.setBackground(new Background(null,bgImgA));
 	}
 	
 	

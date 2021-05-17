@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 public class GameController {
 	private static int gameMode = 0;
 	private static int level = 1;
-	private static int moneyCount = 150;
 	private static boolean is_over = false;
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
@@ -29,12 +28,6 @@ public class GameController {
 	}
 	public static void setLevel(int level) {
 		GameController.level = level;
-	}
-	public static int getMoneyCount() {
-		return moneyCount;
-	}
-	public static void setMoneyCount(int moneyCount) {
-		GameController.moneyCount = moneyCount;
 	}
 	public static boolean is_over() {
 		return is_over;
