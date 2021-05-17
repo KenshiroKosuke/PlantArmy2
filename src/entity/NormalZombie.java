@@ -5,7 +5,7 @@ public class NormalZombie extends Zombie {
 
 	public NormalZombie() {
 		//default stats
-		super(20,2,25, "NormalZombie");
+		super(20,5,25, "NormalZombie"); //hp, speed, coinDrop, name
 		createSprite();
 	}
 }

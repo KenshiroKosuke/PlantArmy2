@@ -23,10 +23,9 @@ public abstract class Zombie {
 	private int hp, speed, coinDrop, x, y, row;
 	private double height;
 	private String name;
-	private boolean isEating = false;
-	//public static Random random = new Random();
-	ImageView imageView;
-	boolean isDead;
+	private boolean isEating;
+	private ImageView imageView;
+	private boolean isDead;
 	private Cell eatingCell;
 	
 
@@ -38,6 +37,8 @@ public abstract class Zombie {
 		this.name = zombieName;
 		this.x = 0;
 		this.y = 0;
+		this.isEating = false;
+		this.isDead = false;
 	}
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
@@ -76,26 +77,33 @@ public abstract class Zombie {
 		FieldPane fieldPane = NormalMode.getField();
 		ObservableList<Node> childrens = fieldPane.getChildren();
 		int xPos = this.checkGridXPosition();
-		if(xPos<9) {
-		Cell thisCell = (Cell) childrens.get(this.row*9+xPos);
-		Cell nextCell;
-		if(xPos!=0) {
-			nextCell = (Cell) childrens.get(this.row*9+xPos -1);
-		}else {
-			nextCell = null;
-		}
-		if(!thisCell.isEmpty()) {
-			eatingCell = thisCell;
-	        return 1;
-	    }else if(nextCell!=null) {
-	    	if(! nextCell.isEmpty())
-	    		eatingCell = nextCell;
-	    	return 2;
-	    }
-		//0 = no plant
-		//1 = plant in this cell
-		//2 = plant in next cell
-		return 0;
+		try {
+			if(xPos<9) {
+				Cell thisCell = (Cell) childrens.get(this.row*9+xPos);
+				Cell nextCell;
+				if(xPos!=0) {
+					nextCell = (Cell) childrens.get(this.row*9+xPos -1);
+				}else {
+					nextCell = null;
+			}
+				if(!thisCell.isEmpty()) {
+					eatingCell = thisCell;
+					return 1;
+				}else if(nextCell!=null) {
+					if(! nextCell.isEmpty()) {
+						eatingCell = nextCell;
+						return 2;
+					}
+				}
+				//0 = no plant
+				//1 = plant in this cell
+				//2 = plant in next cell
+				return 0;
+			}
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Zombie has arrived at our door!");
+			GameController.setGameOver();
 		}
 		return 0;
 	}
@@ -195,6 +203,11 @@ public abstract class Zombie {
 				this.x -= this.speed;
 			}
 		}
+		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0) {
+			// YOU LOSE
+			System.out.println("Zombie has arrived at our door!");
+			GameController.setGameOver();
+		}
 	}
 	
 	public void eat() {
@@ -203,14 +216,28 @@ public abstract class Zombie {
 			@Override
 			public void run() {
 				try {		
-					while(true) {
-						Thread.sleep(700);
+					while(eatingCell.getMyPlant()!=null) {
+						Thread.sleep(400);
 						Thread thread = new Thread(()->{
 							Platform.runLater(new Runnable() {
 								@Override
 								public void run() {
-									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
-									System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));	
+									if(eatingCell.getMyPlant()!=null) {
+										if(eatingCell.getMyPlant().getHp()>0) {
+											eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
+											//ź
+											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));	
+										}else {
+										if(eatingCell.getMyPlant() instanceof Shooter) {
+											for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
+												GameController.getPeaToRemove().add(pea);
+											}
+											GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
+										}
+										eatingCell.removePlant();
+										isEating=false;
+										}
+									}
 								}
 							});
 						});

@@ -32,36 +32,22 @@ public class Main extends Application{
 	private int draw_originx;
 	private int draw_originy;
 	private static Stage primaryStage;
+	private static Scene mainMenuScene;
 	//private static NormalMode normalMode = new NormalMode();
 	private static Scene normalModeScene;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		MainMenu mainMenu = new MainMenu();
-		
-		Scene scene = new Scene(mainMenu, WIDTH, HEIGHT);
-		
-//		Canvas canvas = new Canvas(1024,589);
-//		GraphicsContext gc = canvas.getGraphicsContext2D();
-//		drawGameBoard(gc);
-//		root.getChildren().add(canvas);
-		
-		
-		//Register Event
-		addEventListener(scene);
-		
-		this.primaryStage.setResizable(false);
-		this.primaryStage.setTitle("Plant Army");
-		this.primaryStage.setScene(scene);
-		this.primaryStage.show();
+		startMainMenu();
+		primaryStage.show();
 	}
 	
 	public static void startGame(Scene normalModeScene) {
 		primaryStage.setScene(normalModeScene);
 	}
 	
-	private void addEventListener(Scene s) {
+	private static void addEventListener(Scene s) {
 		s.setOnKeyPressed((event) -> {
 			KeyCode keycode = event.getCode();
 			switch(keycode) {
@@ -91,6 +77,15 @@ public class Main extends Application{
 	
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public static void startMainMenu() {
+		MainMenu mainMenu = new MainMenu();
+		mainMenuScene = new Scene(mainMenu, WIDTH, HEIGHT);
+		addEventListener(mainMenuScene);	
+		primaryStage.setResizable(false);
+		primaryStage.setTitle("Plant Army");
+		primaryStage.setScene(mainMenuScene);
 	}
 
 	public static int getHeight() {

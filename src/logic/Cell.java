@@ -2,8 +2,11 @@ package logic;
 
 import java.util.Random;
 
-import entity.Pea;
+import entity.PeaShooter;
+import entity.Sunflower;
+import entity.base.Pea;
 import entity.base.Plant;
+import entity.base.Shooter;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tooltip;
@@ -60,10 +63,23 @@ public class Cell extends Pane {
 				myPlant = null;
 				//remove plant
 			} else if (myPlant == null) {
-				myPlant = selectedPlant;
 				ShopController.boughtPlant();
-				
-				changePlant(new Pea());
+				if (selectedPlant.getName().equals("PeaShooter")) {
+					myPlant = new PeaShooter();
+				} else if (selectedPlant.getName() == "Sunflower") {
+					myPlant = new Sunflower();
+				} 
+				myPlant.setX(FieldPane.getColumnIndex(this));
+				myPlant.setY(FieldPane.getRowIndex(this));
+				//if type shooter
+				if (myPlant instanceof Shooter) {
+					for(int i=0;i<((Shooter) myPlant).getAmmo();i++) {
+						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY()));
+					}
+					GameController.getShooters().add((Shooter) myPlant);
+				}
+				//peashooter.startShooting();
+				changePlant(myPlant);
 			}
 		}
 	}
@@ -118,6 +134,7 @@ public class Cell extends Pane {
 		});
 		
 	}
+
 	
 	
 }

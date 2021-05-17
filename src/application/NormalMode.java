@@ -3,6 +3,8 @@ import java.util.Random;
 
 import entity.ConeZombie;
 import entity.NormalZombie;
+import entity.base.Pea;
+import entity.base.Shooter;
 import entity.base.Zombie;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -35,7 +37,8 @@ public class NormalMode extends AnchorPane {
 		this.setRightAnchor(field, 30.0);
 		this.setTopAnchor(field, 75.0);
 		populateZombie();
-		
+		ammoReposition();
+		checkFire();
 	}
 	
 	public void populateZombie() {
@@ -85,6 +88,7 @@ public class NormalMode extends AnchorPane {
 				
 			}
 		}
+		System.out.println("From populate : "+GameController.getCurrentZombies().size());
 	}
 	
 	protected void initalizeNewZombie(int code, Zombie zombie) {
@@ -114,10 +118,15 @@ public class NormalMode extends AnchorPane {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							//update x,y,speed,hp(?) etc.
-							GameController.getCurrentZombies().get(code).update();
-							//put it in this pane to see
-							drawZombie(zombie);
+							try {
+								//update x,y,speed,hp(?) etc.
+								GameController.getCurrentZombies().get(code).update();
+								//put it in this pane to see
+								drawZombie(zombie);
+							} catch (IndexOutOfBoundsException e) {
+								// TODO Auto-generated catch block
+								System.out.println("Zombie has been deleted");
+							}
 						}
 					});
 				});
@@ -125,8 +134,8 @@ public class NormalMode extends AnchorPane {
 				/*========================================================*/	
 			}
 		} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// TODO Auto-generated catch block
+			System.out.println("currentZombies cleared while thread was running");
 		}		
 	}
 	
@@ -142,5 +151,66 @@ public class NormalMode extends AnchorPane {
 
 	public static FieldPane getField() {
 		return field;
+	}
+	public void checkFire() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(50);
+						for(Shooter shooter:GameController.getShooters()) {
+							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()) {
+								shooter.startShooting();
+								shooter.setShot(true);
+							}
+						}
+					
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
+	}
+	public void ammoReposition() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(50);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								drawPea();
+							}
+						});
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
+	}
+	public void drawPea() {
+		for(Shooter shooter : GameController.getShooters()) {
+			for(Pea pea : shooter.getPeaList()) {
+				ImageView peaImage = pea.getPeaImageView();
+				this.getChildren().remove(peaImage);
+		        //peaImage.setFitHeight(zombie.getHeight());
+		        //peaImage.setPreserveRatio(true);
+		        peaImage.relocate((double)(pea.getX()), (double)(pea.getY()));
+		        this.getChildren().add(peaImage);
+			}
+		}
+		for(Pea pea: GameController.getPeaToRemove()) {
+			this.getChildren().remove(pea.getPeaImageView());
+
+		}
 	}
 }

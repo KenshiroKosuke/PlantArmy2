@@ -13,12 +13,18 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import entity.PeaShooter;
+import entity.Sunflower;
 import entity.base.Plant;
 public class BuyPlantButton extends Button {
 	private Plant plant;
 	public BuyPlantButton(String plantName) {
 		super();
-		this.plant = new Plant(100,"Pea") {};
+		switch(plantName) {
+		case "PeaShooter": this.plant = new PeaShooter(); 	break;
+		case "Sunflower" : this.plant = new Sunflower(); 	break;
+		default			 : this.plant = null;				break;
+		}
 		this.setPrefHeight(100);
 		this.setPrefWidth(200);
 		//use plant name to set img

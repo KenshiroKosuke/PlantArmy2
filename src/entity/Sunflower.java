@@ -5,7 +5,7 @@ import entity.base.Plant;
 public class Sunflower extends Plant {
 	
 	public Sunflower() {
-		super(20,"Sunflower");
+		super(10,"Sunflower");
 	}
 	
 	public Sunflower(int hp, String plantName) {

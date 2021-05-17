@@ -15,7 +15,7 @@ public class ShopPane extends GridPane{
 		this.setAlignment(Pos.CENTER);
 		this.setHgap(10);
 		this.setVgap(10);
-		buyPlantButtonList.add(new BuyPlantButton("Pea"));
+		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"), new BuyPlantButton("Sunflower"));
 		//add other plants here
 		int i = 0;
 		for (BuyPlantButton button : buyPlantButtonList) {
