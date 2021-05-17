@@ -38,6 +38,7 @@ public class NormalMode extends AnchorPane {
 		this.setTopAnchor(field, 75.0);
 		populateZombie();
 		ammoReposition();
+		checkFire();
 	}
 	
 	public void populateZombie() {
@@ -145,6 +146,29 @@ public class NormalMode extends AnchorPane {
 	public static FieldPane getField() {
 		return field;
 	}
+	public void checkFire() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(50);
+						for(Shooter shooter:GameController.getShooters()) {
+							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()) {
+								shooter.startShooting();
+								shooter.setShot(true);
+							}
+						}
+					
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
+	}
 	public void ammoReposition() {
 		Thread thread = new Thread(new Runnable(){
 			@Override
@@ -178,6 +202,9 @@ public class NormalMode extends AnchorPane {
 		        this.getChildren().add(peaImage);
 			}
 		}
-		
+		for(Pea pea: GameController.getPeaToRemove()) {
+			this.getChildren().remove(pea.getPeaImageView());
+
+		}
 	}
 }

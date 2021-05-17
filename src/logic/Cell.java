@@ -71,7 +71,7 @@ public class Cell extends Pane {
 				for(int i=0;i<peashooter.getAmmo();i++) {
 					peashooter.getPeaList().add(new Pea(peashooter.getX(),peashooter.getY()));
 				}
-				peashooter.startShooting(); //ź
+				//peashooter.startShooting(); //ź
 				changePlant(peashooter);
 				//if type shooter
 				GameController.getShooters().add(peashooter);

@@ -1,6 +1,8 @@
 package logic;
 import java.util.ArrayList;
 
+import application.Main;
+import entity.base.Pea;
 import entity.base.Shooter;
 import entity.base.Zombie;
 
@@ -11,6 +13,7 @@ public class GameController {
 	private static boolean is_win = false;
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
+	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
 	private static int money;
 	
 	public static int getGameMode() {
@@ -55,7 +58,26 @@ public class GameController {
 	public static void setShooters(ArrayList<Shooter> shooters) {
 		GameController.shooters = shooters;
 	}
-	
+	public static boolean shouldIShoot(int x,int y) {
+		boolean shoot = false;
+		for(Zombie zombie : getCurrentZombies()) {
+			if(zombie.getRow()==y&&x<=zombie.checkGridXPosition()&&zombie.getX()<Main.getWidth()) {
+				shoot = true;
+				break;
+			}
+		}
+		return shoot;
+	}
+	public static void removeShooterFromList(Shooter shooter) {
+		shooters.remove(shooter);
+	}
+	public static ArrayList<Pea> getPeaToRemove() {
+		return peaToRemove;
+	}
+	public static void setPeaToRemove(ArrayList<Pea> peaToRemove) {
+		GameController.peaToRemove = peaToRemove;
+	}
+
 	
 	
 	

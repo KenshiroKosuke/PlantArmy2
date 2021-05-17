@@ -15,8 +15,9 @@ public class Pea {
 	public Pea(int x,int y) {
 		this.speed = 12;
 		PeaImageView = new ImageView(IMAGE_NORMAL_PEA);
-		this.y =  (int) ((Main.getHeight()-FieldPane.getFieldHeight())+(FieldPane.getFieldHeight()*y/5)); 
-		this.startingX = (int)((Main.getWidth()-FieldPane.getFieldWidth())+(FieldPane.getFieldWidth()*x/9));
+		PeaImageView.setVisible(false);
+		this.y =  (int) ((Main.getHeight()-FieldPane.getFieldHeight())+(FieldPane.getFieldHeight()*y/5)-20); 
+		this.startingX = (int)((Main.getWidth()-FieldPane.getFieldWidth())+(FieldPane.getFieldWidth()*x/9)+35);
 		}
 	public int getX() {
 		return x;
@@ -35,6 +36,9 @@ public class Pea {
 	}
 	public int getSpeed() {
 		return speed;
+	}
+	public void setPeaImageView(ImageView peaImageView) {
+		PeaImageView = peaImageView;
 	}
 	
 	

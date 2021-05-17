@@ -216,6 +216,12 @@ public abstract class Zombie {
 											//ź
 											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));	
 										}else {
+										if(eatingCell.getMyPlant() instanceof Shooter) {
+											for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
+												GameController.getPeaToRemove().add(pea);
+											}
+											GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
+										}
 										eatingCell.removePlant();
 										isEating=false;
 										}
