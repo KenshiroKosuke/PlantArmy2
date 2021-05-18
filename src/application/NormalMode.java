@@ -119,7 +119,26 @@ public class NormalMode extends AnchorPane {
 						public void run() {
 							try {
 								//update x,y,speed,hp(?) etc.
-								zombie.update();
+								if(zombie.isExploded()) {
+									Thread t = new Thread(new Runnable() {
+										public void run() {
+											try {
+												Thread.sleep(5520);
+												zombie.setDead(true);
+											} catch (InterruptedException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}
+									});
+									t.start();
+									getChildren().remove(zombie.getImageView());
+									zombie.getImageView().setFitHeight(zombie.getHeight());
+									zombie.setImageView(new ImageView(Zombie.getImageExplodedZombie()));
+									getChildren().add(zombie.getImageView());
+								}else {
+									zombie.update();
+								}
 								//put it in this pane to see
 								drawZombie(zombie);
 							} catch (IndexOutOfBoundsException e) {

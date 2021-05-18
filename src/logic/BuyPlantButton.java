@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import entity.CherryBomb;
 import entity.PeaShooter;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
@@ -30,6 +31,7 @@ public class BuyPlantButton extends Button {
 		case "Sunflower" : 		this.plant = new Sunflower(); 		break;
 		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	break;
 		case "Walnut":			this.plant = new Walnut();			break;
+		case "CherryBomb":		this.plant = new CherryBomb(); 		break;
 		default			 : 		this.plant = null;					break;
 		}
 		//this.setPrefHeight(100);

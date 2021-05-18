@@ -1,7 +1,7 @@
 package logic;
 
 public class ShopController {
-	private static int sun = 500;
+	private static int sun = 500000;
 	private static BuyPlantButton selectedButton;
 
 	public static int getSun() {

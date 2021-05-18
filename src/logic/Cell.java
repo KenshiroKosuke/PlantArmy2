@@ -2,10 +2,12 @@ package logic;
 
 import java.util.Random;
 
+import entity.CherryBomb;
 import entity.PeaShooter;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
 import entity.Walnut;
+import entity.base.Explodable;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
@@ -74,6 +76,8 @@ public class Cell extends Pane {
 					myPlant = new SnowPeaShooter();
 				} else if (selectedPlant.getName() == "Walnut") {
 					myPlant = new Walnut();
+				} else if (selectedPlant.getName() == "CherryBomb") {
+					myPlant = new CherryBomb();
 				}
 				myPlant.setX(FieldPane.getColumnIndex(this));
 				myPlant.setY(FieldPane.getRowIndex(this));
@@ -83,6 +87,8 @@ public class Cell extends Pane {
 						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY()));
 					}
 					GameController.getShooters().add((Shooter) myPlant);
+				}if(myPlant instanceof Explodable) {
+					((CherryBomb) myPlant).explode();
 				}
 				//peashooter.startShooting();
 				changePlant(myPlant);

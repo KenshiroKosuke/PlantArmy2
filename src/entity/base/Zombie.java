@@ -28,7 +28,7 @@ public abstract class Zombie {
 	private ImageView imageView;
 	private boolean isDead;
 	private Cell eatingCell;
-	
+	private boolean exploded;
 
 	public Zombie(int hp, int speed, int coinDrop, String zombieName) {
 		this.isDead = false;
@@ -40,10 +40,12 @@ public abstract class Zombie {
 		this.y = 0;
 		this.isEating = false;
 		this.isDead = false;
+		this.exploded = false;
 	}
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
 	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
+	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -125,7 +127,12 @@ public abstract class Zombie {
 			//GameController.getCurrentZombies().remove(this);
 		}else if(S.equals("exploded")) {
 			//code for bombed
+			setHeight(160);
+			setExploded(true);
 		}
+	}
+	public static Image getImageExplodedZombie() {
+		return IMAGE_EXPLODED_ZOMBIE;
 	}
 	public ImageView getImageView() {
 		return imageView;
@@ -278,6 +285,12 @@ public abstract class Zombie {
 
 	public void setRow(int row) {
 		this.row = row;
+	}
+	public boolean isExploded() {
+		return exploded;
+	}
+	public void setExploded(boolean exploded) {
+		this.exploded = exploded;
 	}
 	
 }
