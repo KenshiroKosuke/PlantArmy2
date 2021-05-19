@@ -21,15 +21,17 @@ import logic.FieldPane;
 import logic.GameController;
 
 public abstract class Zombie {
-	private int hp, speed, coinDrop, x, y, row;
+	private int hp, speed, coinDrop, row;
+	private double x,y;
 	private double height;
 	private String name;
 	private boolean isEating;
 	private ImageView imageView;
 	private boolean isDead;
 	private Cell eatingCell;
-	
-
+	private boolean exploded;
+	private double frozenFactor;
+	private int freezeTimer;
 	public Zombie(int hp, int speed, int coinDrop, String zombieName) {
 		this.isDead = false;
 		this.hp = hp;
@@ -40,10 +42,13 @@ public abstract class Zombie {
 		this.y = 0;
 		this.isEating = false;
 		this.isDead = false;
+		this.exploded = false;
+		this.frozenFactor = 0;
 	}
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
 	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
+	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -70,6 +75,9 @@ public abstract class Zombie {
 		//imageView.relocate((double)(getX()), (double)(getY()));
 		
 
+	}
+	public static int getWidth() {
+		return WIDTH;
 	}
 	public int checkGridXPosition() {
 		return (int)( (this.x-(Main.getWidth()-FieldPane.getFieldWidth())+this.WIDTH/1.25) / (FieldPane.getFieldWidth()/9)) ;
@@ -108,7 +116,27 @@ public abstract class Zombie {
 		}
 		return 0;
 	}
-
+	public void damage() {
+		if(getHp()-5>0) {
+			setHp(getHp()-5);
+			System.out.println(getHp());
+		}else {
+			zombieKill("normal");
+		}
+	}
+	public void zombieKill(String S) {
+		if(S.equals("normal")) {
+			setDead(true);
+			//GameController.getCurrentZombies().remove(this);
+		}else if(S.equals("exploded")) {
+			//code for bombed
+			setHeight(160);
+			setExploded(true);
+		}
+	}
+	public static Image getImageExplodedZombie() {
+		return IMAGE_EXPLODED_ZOMBIE;
+	}
 	public ImageView getImageView() {
 		return imageView;
 	}
@@ -149,11 +177,11 @@ public abstract class Zombie {
 		this.coinDrop = coinDrop;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -196,12 +224,20 @@ public abstract class Zombie {
 					if(!isEating)
 						eat();
 				}else {
-					this.x -= this.speed;
+					this.x -= (this.speed-frozenFactor/2);
 				}
 				System.out.println(CheckPlantCollision());
 
 			}else {
-				this.x -= this.speed;
+				this.x -= (this.speed-frozenFactor/2);
+			}
+			if(frozenFactor==1) {
+				freezeTimer+=1;
+				if(freezeTimer>=100) {
+					frozenFactor=0;
+					freezeTimer=0;
+					imageView.setEffect(null);
+				}
 			}
 		}
 		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0) {
@@ -217,38 +253,36 @@ public abstract class Zombie {
 			@Override
 			public void run() {
 				try {		
-					while(eatingCell.getMyPlant()!=null) {
+					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead) {
 						Thread.sleep(400);
-						Thread thread = new Thread(()->{
-							Platform.runLater(new Runnable() {
-								@Override
-								public void run() {
-									if(eatingCell.getMyPlant()!=null) {
-										if(eatingCell.getMyPlant().getHp()>0) {
-											eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
-											//////////////////////////////////////////////////////////////
-											System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
-											//////////////////////////////////////////////////////////////
-											if (eatingCell.getMyPlant() instanceof Walnut && eatingCell.getMyPlant().getHp()==20) {
-												//eatingCell.getMyPlant()
+							if(eatingCell.getMyPlant()!=null) {
+								if(eatingCell.getMyPlant().getHp()>0) {
+									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
+									//////////////////////////////////////////////////////////////
+									System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
+									//////////////////////////////////////////////////////////////
+									if (eatingCell.getMyPlant() instanceof Walnut && eatingCell.getMyPlant().getHp()==20) {
+										//eatingCell.getMyPlant()
+										Platform.runLater(new Runnable() {
+											@Override
+											public void run() {
 												eatingCell.changeGraphicPlant("Walnut_Half.gif");
 											}
-										}else {
-										if(eatingCell.getMyPlant() instanceof Shooter) {
-											for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
-												GameController.getPeaToRemove().add(pea);
-											}
-											GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
-										}
-										eatingCell.removePlant();
-										isEating=false;
-										}
+										});
 									}
+								}else {
+								if(eatingCell.getMyPlant() instanceof Shooter) {
+									GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
+									for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
+										GameController.getPeaToRemove().add(pea);
+									}
+								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
+									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
+								}			
+								eatingCell.removePlant();
+								isEating=false;
 								}
-							});
-						});
-						thread.start();				
-						/*========================================================*/	
+							}
 					}
 				} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -258,7 +292,6 @@ public abstract class Zombie {
 		});
 		thread.start();		
 	}
-
 	public int getRow() {
 		return row;
 	}
@@ -266,5 +299,24 @@ public abstract class Zombie {
 	public void setRow(int row) {
 		this.row = row;
 	}
+	public boolean isExploded() {
+		return exploded;
+	}
+	public void setExploded(boolean exploded) {
+		this.exploded = exploded;
+	}
+	public double getFrozenFactor() {
+		return frozenFactor;
+	}
+	public void setFrozenFactor(int frozenFactor) {
+		this.frozenFactor = frozenFactor;
+	}
+	public int getFreezeTimer() {
+		return freezeTimer;
+	}
+	public void setFreezeTimer(int freezeTimer) {
+		this.freezeTimer = freezeTimer;
+	}
+
 	
 }

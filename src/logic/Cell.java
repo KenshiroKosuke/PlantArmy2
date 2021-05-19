@@ -2,13 +2,19 @@ package logic;
 
 import java.util.Random;
 
+import entity.CherryBomb;
 import entity.PeaShooter;
+import entity.Repeater;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
 import entity.Walnut;
+import entity.base.Explodable;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
+import entity.base.SunProducer;
+import entity.base.Upgradeable;
+import entity.base.sunProducable;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tooltip;
@@ -45,47 +51,69 @@ public class Cell extends Pane {
 //			setPlant(new Pea());
 //		this.setUpTooltip();
 		
-
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, 
 				new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent  e) {
 						// TODO fill in this method					
-						onClickHandler();
+						onClickPlanting();
 					}
 			});
 		
 		this.setBorder(new Border(new BorderStroke(null, BorderStrokeStyle.SOLID, 
 					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 	}
-	private void onClickHandler() {
-		if (ShopController.getSelectedButton() != null) {
-			Plant selectedPlant = ShopController.getSelectedButton().getPlant();
-			if (selectedPlant.getName().equals("DestroyTool")) {
-				myPlant = null;
-				//remove plant
-			} else if (myPlant == null) {
-				ShopController.boughtPlant();
-				if (selectedPlant.getName().equals("PeaShooter")) {
-					myPlant = new PeaShooter();
-				} else if (selectedPlant.getName() == "Sunflower") {
-					myPlant = new Sunflower();
-				} else if (selectedPlant.getName() == "SnowPeaShooter") {
-					myPlant = new SnowPeaShooter();
-				} else if (selectedPlant.getName() == "Walnut") {
-					myPlant = new Walnut();
-				}
-				myPlant.setX(FieldPane.getColumnIndex(this));
-				myPlant.setY(FieldPane.getRowIndex(this));
-				//if type shooter
-				if (myPlant instanceof Shooter) {
-					for(int i=0;i<((Shooter) myPlant).getAmmo();i++) {
-						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY()));
+	private void onClickPlanting() {
+		if(GameController.isUpgrading()) {
+			if(myPlant instanceof Upgradeable) {
+				((Upgradeable) myPlant).upgrade();
+				GameController.setUpgrading(false);
+			}
+		}else {
+			if (ShopController.getSelectedButton() != null) {
+				Plant selectedPlant = ShopController.getSelectedButton().getPlant();
+				if (myPlant == null) {
+					ShopController.boughtPlant();
+					if (selectedPlant.getName().equals("PeaShooter")) {
+						myPlant = new PeaShooter();
+					} else if (selectedPlant.getName() == "Sunflower") {
+						myPlant = new Sunflower();
+					} else if (selectedPlant.getName() == "SnowPeaShooter") {
+						myPlant = new SnowPeaShooter();
+					} else if (selectedPlant.getName() == "Repeater") {
+						myPlant = new Repeater();
+					} else if (selectedPlant.getName() == "Walnut") {
+						myPlant = new Walnut();
+					} else if (selectedPlant.getName() == "CherryBomb") {
+						myPlant = new CherryBomb();
 					}
-					GameController.getShooters().add((Shooter) myPlant);
+					myPlant.setX(FieldPane.getColumnIndex(this));
+					myPlant.setY(FieldPane.getRowIndex(this));
+					//if type shooter
+					if (myPlant instanceof Shooter) {
+						String type;
+						if(myPlant instanceof SnowPeaShooter) {
+							type = "snow";
+						}else {
+							type="normal";
+						}
+						for(int i=0;i<((Shooter) myPlant).getAmmo();i++) {
+							((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY(),type));
+						}
+						GameController.getShooters().add((Shooter) myPlant);
+					}else if(myPlant instanceof SunProducer) {
+						GameController.getSunProducers().add((SunProducer) myPlant);
+					}else if(myPlant instanceof Explodable) {
+						((CherryBomb) myPlant).explode();
+					}
+					//peashooter.startShooting();
+					changePlant(myPlant);
 				}
-				//peashooter.startShooting();
-				changePlant(myPlant);
+			}
+			if (ControlPane.isShovel_On()) {
+				////remove plant and remove image
+				System.out.println("Try to remove plant");
+				this.removePlant();
 			}
 		}
 	}

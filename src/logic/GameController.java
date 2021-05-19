@@ -5,6 +5,7 @@ import application.Main;
 import application.MainMenu;
 import entity.base.Pea;
 import entity.base.Shooter;
+import entity.base.SunProducer;
 import entity.base.Zombie;
 import javafx.scene.Scene;
 
@@ -15,7 +16,8 @@ public class GameController {
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
 	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
-	private static int money;
+	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
+	private static boolean isUpgrading = false;
 	
 	public static int getGameMode() {
 		return gameMode;
@@ -40,12 +42,6 @@ public class GameController {
 	}
 	public static void setCurrentZombies(ArrayList<Zombie> currentZombies) {
 		CurrentZombies = currentZombies;
-	}
-	public static int getMoney() {
-		return money;
-	}
-	public static void setMoney(int money) {
-		GameController.money = money;
 	}
 	public static ArrayList<Shooter> getShooters() {
 		return shooters;
@@ -82,6 +78,18 @@ public class GameController {
 		GameController.getCurrentZombies().clear();
 		Main.startMainMenu();
 		System.out.println("From Zombie.java : "+GameController.getCurrentZombies().size());
+	}
+	public static ArrayList<SunProducer> getSunProducers() {
+		return sunProducers;
+	}
+	public static void setSunProducers(ArrayList<SunProducer> sunProducers) {
+		GameController.sunProducers = sunProducers;
+	}
+	public static boolean isUpgrading() {
+		return isUpgrading;
+	}
+	public static void setUpgrading(boolean isUpgrading) {
+		GameController.isUpgrading = isUpgrading;
 	}
 
 	

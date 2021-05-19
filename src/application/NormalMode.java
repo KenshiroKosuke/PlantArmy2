@@ -1,10 +1,13 @@
 package application;
+import java.util.ArrayList;
 import java.util.Random;
 
 import entity.ConeZombie;
 import entity.NormalZombie;
 import entity.base.Pea;
 import entity.base.Shooter;
+import entity.base.Sun;
+import entity.base.SunProducer;
 import entity.base.Zombie;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,14 +18,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
+import logic.Cell;
+import logic.ControlPane;
 import logic.FieldPane;
 import logic.GameController;
 import logic.ShopPane;
-
 public class NormalMode extends AnchorPane {
+	
 	private Random rand = new Random();
 	private static FieldPane field;
 	private static ShopPane shop;
+	private static ControlPane control;
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
@@ -31,14 +37,41 @@ public class NormalMode extends AnchorPane {
 		BackgroundImage[] bgImgA = {bgImg};
 		field = new FieldPane();
 		shop = new ShopPane();
+		control = new ControlPane();
 		this.setBackground(new Background(null,bgImgA));
 		this.getChildren().add(field);
 		this.getChildren().add(shop);
+		this.getChildren().add(control);
 		this.setRightAnchor(field, 30.0);
 		this.setTopAnchor(field, 75.0);
-		populateZombie();
+		this.setTopAnchor(shop, 66.0);
+		this.setLeftAnchor(shop, -3.0);
+		this.setTopAnchor(control, 10.0);
 		ammoReposition();
 		checkFire();
+		sunTimer();
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				while(!GameController.is_over()) {
+					try {
+						if(GameController.getCurrentZombies().size()==0) {
+							Thread.sleep(2000);
+							populateZombie();
+							System.out.println("new wave");
+						}
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		thread.start();
 	}
 	
 	public void populateZombie() {
@@ -103,24 +136,42 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				updateZombieMovement(code);
+				updateZombieMovement(zombie);
+				killZombie(zombie);
 			}
 		});
 		thread.start();		
 	}
 	
-	private void updateZombieMovement(int code) {
+	private void updateZombieMovement(Zombie zombie) {
 		try {		
-			Zombie zombie = GameController.getCurrentZombies().get(code);
 			while(!zombie.isDead()) {
 				Thread.sleep(50);
-				Thread thread = new Thread(()->{
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
 							try {
 								//update x,y,speed,hp(?) etc.
-								GameController.getCurrentZombies().get(code).update();
+								if(zombie.isExploded()) {
+									Thread t = new Thread(new Runnable() {
+										public void run() {
+											try {
+												Thread.sleep(5520);
+												zombie.setDead(true);
+											} catch (InterruptedException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}
+									});
+									t.start();
+									getChildren().remove(zombie.getImageView());
+									zombie.setImageView(new ImageView(zombie.getImageExplodedZombie()));
+									zombie.getImageView().setFitHeight(getHeight());
+									getChildren().add(zombie.getImageView());
+								}else {
+									zombie.update();
+								}
 								//put it in this pane to see
 								drawZombie(zombie);
 							} catch (IndexOutOfBoundsException e) {
@@ -129,8 +180,7 @@ public class NormalMode extends AnchorPane {
 							}
 						}
 					});
-				});
-				thread.start();				
+			
 				/*========================================================*/	
 			}
 		} catch (InterruptedException e) {
@@ -138,17 +188,27 @@ public class NormalMode extends AnchorPane {
 			System.out.println("currentZombies cleared while thread was running");
 		}		
 	}
-	
 	public void drawZombie(Zombie zombie) {
 		ImageView zombieImageView = zombie.getImageView();
         this.getChildren().remove(zombieImageView);
         zombieImageView.setFitHeight(zombie.getHeight());
-        //zombieImageView.setFitWidth(100);
+        zombieImageView.setFitWidth(zombie.getWidth());
         zombieImageView.setPreserveRatio(true);
         zombieImageView.relocate((double)(zombie.getX()), (double)(zombie.getY()));
         this.getChildren().add(zombieImageView);
 	}
+	public void killZombie(Zombie zombie) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				ImageView zombieImageView = zombie.getImageView();
+				getChildren().remove(zombieImageView);
+			}			
+		});
+	    GameController.getCurrentZombies().remove(zombie);
 
+	}
 	public static FieldPane getField() {
 		return field;
 	}
@@ -198,8 +258,13 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		for(Shooter shooter : GameController.getShooters()) {
-			for(Pea pea : shooter.getPeaList()) {
+		System.out.println(GameController.getPeaToRemove());
+		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
+		for(Pea pea: GameController.getPeaToRemove()) {
+			if(pea.isPeaDead()) {
+				this.getChildren().remove(pea.getPeaImageView());
+			}else {
+				newPeaToRemove.add(pea);
 				ImageView peaImage = pea.getPeaImageView();
 				this.getChildren().remove(peaImage);
 		        //peaImage.setFitHeight(zombie.getHeight());
@@ -208,9 +273,88 @@ public class NormalMode extends AnchorPane {
 		        this.getChildren().add(peaImage);
 			}
 		}
-		for(Pea pea: GameController.getPeaToRemove()) {
-			this.getChildren().remove(pea.getPeaImageView());
-
+		GameController.setPeaToRemove(newPeaToRemove);
+		for(Shooter shooter : GameController.getShooters()) {
+			for(Pea pea : shooter.getPeaList()) {
+				if(!pea.isPeaDead()) {
+					ImageView peaImage = pea.getPeaImageView();
+					this.getChildren().remove(peaImage);
+			        //peaImage.setFitHeight(zombie.getHeight());
+			        //peaImage.setPreserveRatio(true);
+			        peaImage.relocate((double)(pea.getX()), (double)(pea.getY()));
+			        this.getChildren().add(peaImage);
+				}
+			}
 		}
+
 	}
+	public void sunTimer() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(1650);
+						for(SunProducer sunProducer : GameController.getSunProducers()) {
+							sunProducer.setSunProduceTimer(sunProducer.getSunProduceTimer()+1);
+							if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										sunProducer.produceSun();
+										for(Sun sun : sunProducer.getSunList()) {
+											sun.getSunImageView().setDisable(false);
+											sun.getSunImageView().setVisible(true);
+											getChildren().add(sun.getSunImageView());
+										}
+										sunProducer.setSunProduceTimer(0);
+										FieldPane fieldPane = NormalMode.getField();
+										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
+										String image_path = ClassLoader.getSystemResource("Sunflower.gif").toString();
+										cell.changeGraphicPlant(image_path);
+									}
+								});
+							}else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()*4/5) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										FieldPane fieldPane = NormalMode.getField();
+										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
+										String image_path = ClassLoader.getSystemResource("SunflowerGlow.gif").toString();
+										cell.changeGraphicPlant(image_path);
+									}
+								});
+							}
+							else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()/2) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										sunProducer.produceSun();
+										for(Sun sun : sunProducer.getSunList()) {
+											getChildren().remove(sun.getSunImageView());
+										}
+									}
+								});
+							}
+						}
+						
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
+	}
+
+	public static ControlPane getControl() {
+		return control;
+	}
+
+	public static void setControl(ControlPane control) {
+		NormalMode.control = control;
+	}
+	
+	
 }
