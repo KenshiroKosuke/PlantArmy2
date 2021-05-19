@@ -276,7 +276,9 @@ public abstract class Zombie {
 									for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
 										GameController.getPeaToRemove().add(pea);
 									}
-								}
+								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
+									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
+								}			
 								eatingCell.removePlant();
 								isEating=false;
 								}

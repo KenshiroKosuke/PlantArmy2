@@ -29,24 +29,27 @@ public class ShopPane extends GridPane{
 				@Override
 				public void handle(ActionEvent arg0) {
 					// TODO Auto-generated method stub
-					if (ShopController.getSelectedButton() != null) {
-						if (ShopController.getSelectedButton().getPlant() == button.getPlant()) {
-							System.out.println("unselect");
-							ShopController.getSelectedButton().unhighlight();
-							ShopController.setSelectedButton(null);
-						} else {
-							System.out.println("swap button");
+					if(!GameController.isUpgrading()) {
+						if (ShopController.getSelectedButton() != null) {
+							if (ShopController.getSelectedButton().getPlant() == button.getPlant()) {
+								System.out.println("unselect");
+								ShopController.getSelectedButton().unhighlight();
+								ShopController.setSelectedButton(null);
+							} else {
+								System.out.println("swap button");
+								setSelectedButton(button);
+							}
+						} else if (ShopController.getSun() >= button.getPlant().getPrice()) {
+							System.out.println("set new button");
 							setSelectedButton(button);
 						}
-					} else if (ShopController.getSun() >= button.getPlant().getPrice()) {
-						System.out.println("set new button");
-						setSelectedButton(button);
 					}
 				}
 			});
 			this.add(button,0,i );
 			i++;
 		}
+		this.add(new UpgradeButton(),0,i);
 	}
 	public void setSelectedButton(BuyPlantButton selectedButton) {
 		resetButtonsBackGroundColor();

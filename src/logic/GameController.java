@@ -17,6 +17,7 @@ public class GameController {
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
 	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
 	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
+	private static boolean isUpgrading = false;
 	
 	public static int getGameMode() {
 		return gameMode;
@@ -83,6 +84,12 @@ public class GameController {
 	}
 	public static void setSunProducers(ArrayList<SunProducer> sunProducers) {
 		GameController.sunProducers = sunProducers;
+	}
+	public static boolean isUpgrading() {
+		return isUpgrading;
+	}
+	public static void setUpgrading(boolean isUpgrading) {
+		GameController.isUpgrading = isUpgrading;
 	}
 
 	

@@ -41,33 +41,35 @@ public class Pea {
 		int zombieLocation;
 		if(!isPeaDead) {
 		for(Zombie zombie: GameController.getCurrentZombies()) {
-			if(zombie.getRow()==shooter.getY()){
-				zombieLocation = (int) (zombie.getX()+Zombie.getWidth()/2);
-				if(zombieLocation>getX()&&zombieLocation<getX()+PEA_WIDTH ) {
-					collide = true;
-					zombie.damage();
-					if(shooter instanceof SnowPeaShooter) {
-						zombie.setFrozenFactor(1);
-						zombie.setFreezeTimer(0);
-                        ColorAdjust monochrome = new ColorAdjust();
-                        monochrome.setContrast(-1.0);
-                        monochrome.setSaturation(-0.5);
-                        Blend snowEffect = new Blend(
-                            BlendMode.SRC_ATOP,
-                            null,
-                            new ColorInput(
-                                    0,
-                                    0,
-                                    zombie.getImageView().getFitWidth(),
-                                    zombie.getImageView().getFitHeight(),
-                                    Color.BLUE
-                            )
-                        );
-                        snowEffect.setOpacity(0.4);
-                        zombie.getImageView().setEffect(snowEffect);
-                    }
-					setPeaDead(true);
-					break;
+			if(!zombie.isExploded()) {
+				if(zombie.getRow()==shooter.getY()){
+					zombieLocation = (int) (zombie.getX()+Zombie.getWidth()/2);
+					if(zombieLocation>getX()&&zombieLocation<getX()+PEA_WIDTH ) {
+						collide = true;
+						zombie.damage();
+						if(shooter instanceof SnowPeaShooter) {
+							zombie.setFrozenFactor(1);
+							zombie.setFreezeTimer(0);
+	                        ColorAdjust monochrome = new ColorAdjust();
+	                        monochrome.setContrast(-1.0);
+	                        monochrome.setSaturation(-0.5);
+	                        Blend snowEffect = new Blend(
+	                            BlendMode.SRC_ATOP,
+	                            null,
+	                            new ColorInput(
+	                                    0,
+	                                    0,
+	                                    zombie.getImageView().getFitWidth(),
+	                                    zombie.getImageView().getFitHeight(),
+	                                    Color.BLUE
+	                            )
+	                        );
+	                        snowEffect.setOpacity(0.4);
+	                        zombie.getImageView().setEffect(snowEffect);
+	                    }
+						setPeaDead(true);
+						break;
+					}
 				}
 			}
 		}

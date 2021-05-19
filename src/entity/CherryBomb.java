@@ -22,8 +22,7 @@ public class CherryBomb extends Plant implements Explodable{
 				// TODO Auto-generated method stub
 				int row,column;
 				try {
-					Thread.sleep(2400);
-					System.out.println("boom");
+					Thread.sleep(2200);
 					for(Zombie zombie:GameController.getCurrentZombies()) {
 						row = zombie.getRow();
 						column = zombie.checkGridXPosition();

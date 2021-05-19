@@ -13,7 +13,7 @@ public class SunProducer extends Plant implements sunProducable {
 	private int sunCount;
 	private int sunProduceTime;
 	public SunProducer(int hp, String plantName, int sunCount,int sunProducetime) {
-		super(10, "Sunflower");
+		super(10, plantName);
 		this.sunProduceTimer=0;
 		this.sunCount=sunCount;
 		this.sunProduceTime = sunProducetime;

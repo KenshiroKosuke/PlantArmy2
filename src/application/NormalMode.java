@@ -1,4 +1,5 @@
 package application;
+import java.util.ArrayList;
 import java.util.Random;
 
 import entity.ConeZombie;
@@ -17,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
+import logic.Cell;
 import logic.FieldPane;
 import logic.GameController;
 import logic.ShopPane;
@@ -157,8 +159,8 @@ public class NormalMode extends AnchorPane {
 									});
 									t.start();
 									getChildren().remove(zombie.getImageView());
-									zombie.getImageView().setFitHeight(zombie.getHeight());
-									zombie.setImageView(new ImageView(Zombie.getImageExplodedZombie()));
+									zombie.setImageView(new ImageView(zombie.getImageExplodedZombie()));
+									zombie.getImageView().setFitHeight(getHeight());
 									getChildren().add(zombie.getImageView());
 								}else {
 									zombie.update();
@@ -249,10 +251,22 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
+		System.out.println(GameController.getPeaToRemove());
+		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
-			this.getChildren().remove(pea.getPeaImageView());
-
+			if(pea.isPeaDead()) {
+				this.getChildren().remove(pea.getPeaImageView());
+			}else {
+				newPeaToRemove.add(pea);
+				ImageView peaImage = pea.getPeaImageView();
+				this.getChildren().remove(peaImage);
+		        //peaImage.setFitHeight(zombie.getHeight());
+		        //peaImage.setPreserveRatio(true);
+		        peaImage.relocate((double)(pea.getX()), (double)(pea.getY()));
+		        this.getChildren().add(peaImage);
+			}
 		}
+		GameController.setPeaToRemove(newPeaToRemove);
 		for(Shooter shooter : GameController.getShooters()) {
 			for(Pea pea : shooter.getPeaList()) {
 				if(!pea.isPeaDead()) {
@@ -273,7 +287,7 @@ public class NormalMode extends AnchorPane {
 			public void run() {
 				while(true) {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(1650);
 						for(SunProducer sunProducer : GameController.getSunProducers()) {
 							sunProducer.setSunProduceTimer(sunProducer.getSunProduceTimer()+1);
 							if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()) {
@@ -287,9 +301,24 @@ public class NormalMode extends AnchorPane {
 											getChildren().add(sun.getSunImageView());
 										}
 										sunProducer.setSunProduceTimer(0);
+										FieldPane fieldPane = NormalMode.getField();
+										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
+										String image_path = ClassLoader.getSystemResource("Sunflower.gif").toString();
+										cell.changeGraphicPlant(image_path);
 									}
 								});
-							}else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()/2) {
+							}else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()*4/5) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										FieldPane fieldPane = NormalMode.getField();
+										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
+										String image_path = ClassLoader.getSystemResource("SunflowerGlow.gif").toString();
+										cell.changeGraphicPlant(image_path);
+									}
+								});
+							}
+							else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()/2) {
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
