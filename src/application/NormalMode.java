@@ -5,6 +5,8 @@ import entity.ConeZombie;
 import entity.NormalZombie;
 import entity.base.Pea;
 import entity.base.Shooter;
+import entity.base.Sun;
+import entity.base.SunProducer;
 import entity.base.Zombie;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -39,6 +41,7 @@ public class NormalMode extends AnchorPane {
 		populateZombie();
 		ammoReposition();
 		checkFire();
+		sunTimer();
 	}
 	
 	public void populateZombie() {
@@ -242,5 +245,49 @@ public class NormalMode extends AnchorPane {
 			}
 		}
 
+	}
+	public void sunTimer() {
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(1000);
+						for(SunProducer sunProducer : GameController.getSunProducers()) {
+							sunProducer.setSunProduceTimer(sunProducer.getSunProduceTimer()+1);
+							if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										sunProducer.produceSun();
+										for(Sun sun : sunProducer.getSunList()) {
+											sun.getSunImageView().setDisable(false);
+											sun.getSunImageView().setVisible(true);
+											getChildren().add(sun.getSunImageView());
+										}
+										sunProducer.setSunProduceTimer(0);
+									}
+								});
+							}else if(sunProducer.getSunProduceTimer()>=sunProducer.getSunProduceTime()/2) {
+								Platform.runLater(new Runnable() {
+									@Override
+									public void run() {
+										sunProducer.produceSun();
+										for(Sun sun : sunProducer.getSunList()) {
+											getChildren().remove(sun.getSunImageView());
+										}
+									}
+								});
+							}
+						}
+						
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.start();		
 	}
 }

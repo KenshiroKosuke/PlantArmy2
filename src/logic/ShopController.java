@@ -28,4 +28,8 @@ public class ShopController {
 		}
 		
 	}
+
+	public static void setSun(int sun) {
+		ShopController.sun = sun;
+	}
 }

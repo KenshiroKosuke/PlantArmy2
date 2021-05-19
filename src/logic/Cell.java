@@ -11,6 +11,8 @@ import entity.base.Explodable;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
+import entity.base.SunProducer;
+import entity.base.sunProducable;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tooltip;
@@ -87,7 +89,9 @@ public class Cell extends Pane {
 						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY()));
 					}
 					GameController.getShooters().add((Shooter) myPlant);
-				}if(myPlant instanceof Explodable) {
+				}else if(myPlant instanceof SunProducer) {
+					GameController.getSunProducers().add((SunProducer) myPlant);
+				}else if(myPlant instanceof Explodable) {
 					((CherryBomb) myPlant).explode();
 				}
 				//peashooter.startShooting();

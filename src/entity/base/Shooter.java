@@ -37,6 +37,7 @@ public abstract class Shooter extends Plant {
 									pea.setFireRateTimer(0);
 							        pea.getPeaImageView().relocate((double)(pea.getX()), (double)(pea.getY()));
 									pea.getPeaImageView().setVisible(true);
+									pea.getPeaImageView().setDisable(false);
 								}else {
 									pea.setFireRateTimer(pea.getFireRateTimer()+10);
 								}
@@ -72,6 +73,7 @@ public abstract class Shooter extends Plant {
 					});
 					thread.start();
 					pea.getPeaImageView().setVisible(true);
+					pea.getPeaImageView().setDisable(false);
 					try {
 						Thread.sleep(200);
 					} catch (InterruptedException e) {
@@ -92,12 +94,14 @@ public abstract class Shooter extends Plant {
 				if(pea.checkZombieCollision(this)) {
 					pea.setPeaDead(true);
 					pea.getPeaImageView().setVisible(false);
+					pea.getPeaImageView().setDisable(true);
 				}else {
 					pea.setX(pea.getX()+pea.getSpeed());
 				}
 			}else {
 				pea.setPeaDead(true);
 				pea.getPeaImageView().setVisible(false);
+				pea.getPeaImageView().setDisable(true);
 			}
 		}
 	}

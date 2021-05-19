@@ -19,6 +19,7 @@ public class Pea {
 		this.speed = 12;
 		PeaImageView = new ImageView(IMAGE_NORMAL_PEA);
 		PeaImageView.setVisible(false);
+		PeaImageView.setDisable(true);
 		this.y =  (int) ((Main.getHeight()-FieldPane.getFieldHeight())+(FieldPane.getFieldHeight()*y/5)-20); 
 		this.startingX = (int)((Main.getWidth()-FieldPane.getFieldWidth())+(FieldPane.getFieldWidth()*x/9)+35);
 		this.isPeaDead = true;
@@ -34,6 +35,7 @@ public class Pea {
 				if(zombieLocation>getX()&&zombieLocation<getX()+PEA_WIDTH ) {
 					collide = true;
 					zombie.damage();
+					setPeaDead(true);
 					break;
 				}
 			}
