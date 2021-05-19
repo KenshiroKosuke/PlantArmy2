@@ -21,7 +21,8 @@ import logic.FieldPane;
 import logic.GameController;
 
 public abstract class Zombie {
-	private int hp, speed, coinDrop, x, y, row;
+	private int hp, speed, coinDrop, row;
+	private double x,y;
 	private double height;
 	private String name;
 	private boolean isEating;
@@ -29,7 +30,8 @@ public abstract class Zombie {
 	private boolean isDead;
 	private Cell eatingCell;
 	private boolean exploded;
-
+	private double frozenFactor;
+	private int freezeTimer;
 	public Zombie(int hp, int speed, int coinDrop, String zombieName) {
 		this.isDead = false;
 		this.hp = hp;
@@ -41,6 +43,7 @@ public abstract class Zombie {
 		this.isEating = false;
 		this.isDead = false;
 		this.exploded = false;
+		this.frozenFactor = 0;
 	}
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
@@ -174,11 +177,11 @@ public abstract class Zombie {
 		this.coinDrop = coinDrop;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -221,12 +224,20 @@ public abstract class Zombie {
 					if(!isEating)
 						eat();
 				}else {
-					this.x -= this.speed;
+					this.x -= (this.speed-frozenFactor/2);
 				}
 				System.out.println(CheckPlantCollision());
 
 			}else {
-				this.x -= this.speed;
+				this.x -= (this.speed-frozenFactor/2);
+			}
+			if(frozenFactor==1) {
+				freezeTimer+=1;
+				if(freezeTimer>=100) {
+					frozenFactor=0;
+					freezeTimer=0;
+					imageView.setEffect(null);
+				}
 			}
 		}
 		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0) {
@@ -292,5 +303,18 @@ public abstract class Zombie {
 	public void setExploded(boolean exploded) {
 		this.exploded = exploded;
 	}
+	public double getFrozenFactor() {
+		return frozenFactor;
+	}
+	public void setFrozenFactor(int frozenFactor) {
+		this.frozenFactor = frozenFactor;
+	}
+	public int getFreezeTimer() {
+		return freezeTimer;
+	}
+	public void setFreezeTimer(int freezeTimer) {
+		this.freezeTimer = freezeTimer;
+	}
+
 	
 }

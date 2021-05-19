@@ -18,6 +18,7 @@ public class ShopPane extends GridPane{
 		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"),
 								  new BuyPlantButton("Sunflower"),
 								  new BuyPlantButton("SnowPeaShooter"),
+								  new BuyPlantButton("Repeater"),
 								  new BuyPlantButton("Walnut"),
 								  new BuyPlantButton("CherryBomb")
 								  );

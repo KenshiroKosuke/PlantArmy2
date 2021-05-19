@@ -38,10 +38,31 @@ public class NormalMode extends AnchorPane {
 		this.getChildren().add(shop);
 		this.setRightAnchor(field, 30.0);
 		this.setTopAnchor(field, 75.0);
-		populateZombie();
 		ammoReposition();
 		checkFire();
 		sunTimer();
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				while(!GameController.is_over()) {
+					try {
+						if(GameController.getCurrentZombies().size()==0) {
+							Thread.sleep(2000);
+							populateZombie();
+							System.out.println("new wave");
+						}
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		thread.start();
 	}
 	
 	public void populateZombie() {
@@ -162,7 +183,7 @@ public class NormalMode extends AnchorPane {
 		ImageView zombieImageView = zombie.getImageView();
         this.getChildren().remove(zombieImageView);
         zombieImageView.setFitHeight(zombie.getHeight());
-        //zombieImageView.setFitWidth(100);
+        zombieImageView.setFitWidth(zombie.getWidth());
         zombieImageView.setPreserveRatio(true);
         zombieImageView.relocate((double)(zombie.getX()), (double)(zombie.getY()));
         this.getChildren().add(zombieImageView);

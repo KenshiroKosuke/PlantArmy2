@@ -17,6 +17,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import entity.CherryBomb;
 import entity.PeaShooter;
+import entity.Repeater;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
 import entity.Walnut;
@@ -30,6 +31,7 @@ public class BuyPlantButton extends Button {
 		case "PeaShooter": 		this.plant = new PeaShooter();		break;
 		case "Sunflower" : 		this.plant = new Sunflower(); 		break;
 		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	break;
+		case "Repeater": 		this.plant = new Repeater();		break;
 		case "Walnut":			this.plant = new Walnut();			break;
 		case "CherryBomb":		this.plant = new CherryBomb(); 		break;
 		default			 : 		this.plant = null;					break;

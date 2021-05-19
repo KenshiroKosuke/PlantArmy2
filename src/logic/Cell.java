@@ -4,6 +4,7 @@ import java.util.Random;
 
 import entity.CherryBomb;
 import entity.PeaShooter;
+import entity.Repeater;
 import entity.SnowPeaShooter;
 import entity.Sunflower;
 import entity.Walnut;
@@ -76,6 +77,8 @@ public class Cell extends Pane {
 					myPlant = new Sunflower();
 				} else if (selectedPlant.getName() == "SnowPeaShooter") {
 					myPlant = new SnowPeaShooter();
+				} else if (selectedPlant.getName() == "Repeater") {
+					myPlant = new Repeater();
 				} else if (selectedPlant.getName() == "Walnut") {
 					myPlant = new Walnut();
 				} else if (selectedPlant.getName() == "CherryBomb") {
@@ -85,8 +88,14 @@ public class Cell extends Pane {
 				myPlant.setY(FieldPane.getRowIndex(this));
 				//if type shooter
 				if (myPlant instanceof Shooter) {
+					String type;
+					if(myPlant instanceof SnowPeaShooter) {
+						type = "snow";
+					}else {
+						type="normal";
+					}
 					for(int i=0;i<((Shooter) myPlant).getAmmo();i++) {
-						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY()));
+						((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(),myPlant.getY(),type));
 					}
 					GameController.getShooters().add((Shooter) myPlant);
 				}else if(myPlant instanceof SunProducer) {

@@ -13,6 +13,7 @@ public abstract class Plant {
 		case "PeaShooter" :		price = 100 ; name ="PeaShooter"; 		break;
 		case "Sunflower" :		price = 50	; name ="Sunflower"; 		break;
 		case "SnowPeaShooter" :	price = 175 ; name ="SnowPeaShooter"; 	break;
+		case "Repeater":		price = 200 ; name ="Repeater";			break;
 		case "Walnut" :			price = 50	; name ="Walnut";			break;
 		case "CherryBomb":		price = 150 ; name ="CherryBomb";		break;
 		default : 				name = "Logo"; 	;
