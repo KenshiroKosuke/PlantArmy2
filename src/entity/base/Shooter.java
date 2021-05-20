@@ -30,7 +30,7 @@ public abstract class Shooter extends Plant {
 					Thread thread = new Thread(new Runnable(){
 						@Override
 						public void run() {
-							while(GameController.shouldIShoot(getX(),getY())&&getHp()>0) {
+							while(GameController.shouldIShoot(getX(),getY())&&getHp()>0&&!GameController.is_over()) {
 								if(pea.getFireRateTimer()>=getFireRate()) {
 									pea.setPeaDead(false);
 									pea.setX(pea.getStartingX());
@@ -55,7 +55,7 @@ public abstract class Shooter extends Plant {
 								}
 							}
 							setShot(false);
-							while(!pea.isPeaDead()) {
+							while(!pea.isPeaDead()&&!GameController.is_over()) {
 								try {
 									Thread.sleep(50);
 									Platform.runLater(new Runnable() {

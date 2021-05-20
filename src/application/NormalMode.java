@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.media.AudioClip;
 import logic.Cell;
 import logic.ControlPane;
 import logic.FieldPane;
@@ -29,6 +30,8 @@ public class NormalMode extends AnchorPane {
 	private static FieldPane field;
 	private static ShopPane shop;
 	private static ControlPane control;
+	private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
+	private static AudioClip zombieComingSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Is_coming.wav").toString());
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
@@ -36,8 +39,8 @@ public class NormalMode extends AnchorPane {
 		BackgroundImage bgImg = new BackgroundImage(img, null, null, null, bgSize);
 		BackgroundImage[] bgImgA = {bgImg};
 		field = new FieldPane();
-		shop = new ShopPane();
 		control = new ControlPane();
+		shop = new ShopPane();
 		this.setBackground(new Background(null,bgImgA));
 		this.getChildren().add(field);
 		this.getChildren().add(shop);
@@ -51,6 +54,8 @@ public class NormalMode extends AnchorPane {
 		ammoReposition();
 		checkFire();
 		sunTimer();
+		gameMusic.setCycleCount(AudioClip.INDEFINITE);
+		//gameMusic.play();
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
@@ -60,6 +65,7 @@ public class NormalMode extends AnchorPane {
 					try {
 						if(GameController.getCurrentZombies().size()==0) {
 							Thread.sleep(2000);
+							zombieComingSound.play();
 							populateZombie();
 							System.out.println("new wave");
 						}
@@ -75,6 +81,10 @@ public class NormalMode extends AnchorPane {
 		thread.start();
 	}
 	
+	public static AudioClip getGameMusic() {
+		return gameMusic;
+	}
+
 	public void populateZombie() {
 		int enemyCount = 18+6*GameController.getLevel();
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
@@ -146,7 +156,7 @@ public class NormalMode extends AnchorPane {
 	
 	private void updateZombieMovement(Zombie zombie) {
 		try {		
-			while(!zombie.isDead()) {
+			while(!zombie.isDead()&&!GameController.is_over()) {
 				Thread.sleep(50);
 					Platform.runLater(new Runnable() {
 						@Override
@@ -158,7 +168,9 @@ public class NormalMode extends AnchorPane {
 										public void run() {
 											try {
 												Thread.sleep(5520);
-												zombie.setDead(true);
+												if(!GameController.is_over()) {
+													zombie.setDead(true);
+												}
 											} catch (InterruptedException e) {
 												// TODO Auto-generated catch block
 												e.printStackTrace();
@@ -217,7 +229,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(50);
 						for(Shooter shooter:GameController.getShooters()) {
@@ -230,7 +242,6 @@ public class NormalMode extends AnchorPane {
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						System.out.println("error at NormalMode.checkFire");
 					}
 				}
 			}
@@ -241,7 +252,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(50);
 						Platform.runLater(new Runnable() {
@@ -260,7 +271,7 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		//System.out.println(GameController.getPeaToRemove());
+		System.out.println(GameController.getPeaToRemove());
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
 			if(pea.isPeaDead()) {
@@ -294,7 +305,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(1650);
 						for(SunProducer sunProducer : GameController.getSunProducers()) {
@@ -312,7 +323,7 @@ public class NormalMode extends AnchorPane {
 										sunProducer.setSunProduceTimer(0);
 										FieldPane fieldPane = NormalMode.getField();
 										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
-										String image_path = ClassLoader.getSystemResource("Sunflower.gif").toString();
+										String image_path = ClassLoader.getSystemResource(cell.getMyPlant().getName()+".gif").toString();
 										cell.changeGraphicPlant(image_path);
 									}
 								});
@@ -322,7 +333,7 @@ public class NormalMode extends AnchorPane {
 									public void run() {
 										FieldPane fieldPane = NormalMode.getField();
 										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
-										String image_path = ClassLoader.getSystemResource("SunflowerGlow.gif").toString();
+										String image_path = ClassLoader.getSystemResource(cell.getMyPlant().getName()+"Glow.gif").toString();
 										cell.changeGraphicPlant(image_path);
 									}
 								});
@@ -358,12 +369,9 @@ public class NormalMode extends AnchorPane {
 		NormalMode.control = control;
 	}
 
-	public static ShopPane getShop() {
-		return shop;
+	public static AudioClip getZombieComingSound() {
+		return zombieComingSound;
 	}
-
-	public static void setShop(ShopPane shop) {
-		NormalMode.shop = shop;
-	}
+	
 	
 }

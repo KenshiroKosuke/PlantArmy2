@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import logic.Cell;
 import logic.FieldPane;
@@ -49,6 +50,8 @@ public abstract class Zombie {
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
 	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
 	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
+	private static AudioClip eatSound = new AudioClip(ClassLoader.getSystemResource("audio/Eat.mp3").toString());
+	private static AudioClip plantEatenSound = new AudioClip(ClassLoader.getSystemResource("audio/Plant_Eaten.mp3").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -58,7 +61,11 @@ public abstract class Zombie {
 	
 	public void createSprite() {
 		if(isDead) {
+			//zombie is now dead
 			imageView.setImage(null);
+			//animation.stop();
+			//dead image
+			//imageView = new ImageView(); 
 		}
 		else {
 			switch(name) {
@@ -67,6 +74,9 @@ public abstract class Zombie {
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
+		//imageView.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
+		//imageView.relocate((double)(getX()), (double)(getY()));
+		
 
 	}
 	public static int getWidth() {
@@ -205,7 +215,7 @@ public abstract class Zombie {
 	public void update() {
 		// TODO Auto-generated method stub
 		// +speed, x, y etc
-		if(!isDead) {
+		if(!isDead&&!GameController.is_over()) {
 			if(CheckPlantCollision()==1) {
 				//call eat method
 				System.out.println(CheckPlantCollision());
@@ -233,8 +243,8 @@ public abstract class Zombie {
 				}
 			}
 		}
-		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0 && !GameController.is_over()) { 
-			// YOU LOSE. ZOMBIE ENTERS WHILE GAME IS NOT OVER
+		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0) {
+			// YOU LOSE
 			System.out.println("Zombie has arrived at our door!");
 			GameController.setGameOver();
 		}
@@ -246,11 +256,12 @@ public abstract class Zombie {
 			@Override
 			public void run() {
 				try {		
-					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead) {
-						Thread.sleep(400);
+					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead&&!GameController.is_over()) {
+						Thread.sleep(800);
 							if(eatingCell.getMyPlant()!=null) {
 								if(eatingCell.getMyPlant().getHp()>0) {
-									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
+									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 2);
+									eatSound.play(0.4);
 									//////////////////////////////////////////////////////////////
 									System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
 									//////////////////////////////////////////////////////////////
@@ -272,6 +283,7 @@ public abstract class Zombie {
 //								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
 //									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
 //								}			
+								plantEatenSound.play(0.4);
 								eatingCell.removePlant();
 								isEating=false;
 								}

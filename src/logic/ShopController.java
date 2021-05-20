@@ -10,7 +10,8 @@ import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 
 public class ShopController {
-	private static int sun = 500;
+	private static final int INITIAL_SUN = 500;
+	private static int sun = INITIAL_SUN;
 	private static BuyPlantButton selectedButton;
 
 	public static int getSun() {
@@ -46,5 +47,9 @@ public class ShopController {
 	public static void setSun(int sun) {
 		ShopController.sun = sun;
 		NormalMode.getControl().labelSunUpdate();
+	}
+
+	public static int getInitialSun() {
+		return INITIAL_SUN;
 	}
 }

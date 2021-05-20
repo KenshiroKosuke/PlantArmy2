@@ -1,7 +1,10 @@
 package application;
 
+
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,8 +20,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logic.Cell;
 import logic.FieldPane;
 import logic.GameController;
@@ -35,15 +40,29 @@ public class Main extends Application{
 	private static Scene mainMenuScene;
 	//private static NormalMode normalMode = new NormalMode();
 	private static Scene normalModeScene;
-	
+	private static AudioClip menuMusic = new AudioClip(ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			
+			@Override
+			public void handle(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				menuMusic.stop();
+				NormalMode.getGameMusic().stop();
+				NormalMode.getZombieComingSound().stop();
+				GameController.setGameOver();
+			}
+		});
 		startMainMenu();
 		primaryStage.show();
+		menuMusic.setCycleCount(AudioClip.INDEFINITE);
+		menuMusic.play();
 	}
 	
 	public static void startGame(Scene normalModeScene) {
+		menuMusic.stop();
 		primaryStage.setScene(normalModeScene);
 	}
 	

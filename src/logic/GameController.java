@@ -71,17 +71,31 @@ public class GameController {
 		GameController.peaToRemove = peaToRemove;
 	}
 	public static void setGameOver() {
-		// TODO Auto-generated method stub
+		
 		is_over = true;
+		
 		//RESET ZOMBIE
 		for (Zombie zombie: CurrentZombies) {
 			zombie.setDead(true);
 		}
 		GameController.getCurrentZombies().clear();
+		
+		//RESET PLANT
+		for (Shooter shooter:shooters) {
+			shooter.getPeaList().clear();
+		}
+		GameController.getShooters().clear();
+		GameController.getPeaToRemove().clear();
+		GameController.getSunProducers().clear();
+		GameController.setUpgrading(false);
+		
 		//RESET BUTTON AND SHOPCONTROL BUTTON
 //		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
 //			button.setEffect(null); button.setTime(0); button.setDisable(false); button.setOpacity(1.0);
 //		}
+		
+		ShopController.setSun(ShopController.getInitialSun());
+		ShopController.setSelectedButton(null);
 		ShopPane.getBuyPlantButtonList().clear();
 		System.out.println("From Zombie.java -> GameController.java : "+GameController.getCurrentZombies().size());	
 		ShopController.setSelectedButton(null);
@@ -99,15 +113,6 @@ public class GameController {
 	public static void setUpgrading(boolean isUpgrading) {
 		GameController.isUpgrading = isUpgrading;
 	}
-
-	
-	
-	
-//	public static void changeScene() {
-//		// change from menu to in-game OR change from in-game to menu
-//		if (isGameStarted)
-//			level += 1;
-//	}
 	
 //	public static void changeLevel() {
 //		level += 1;
