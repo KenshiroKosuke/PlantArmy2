@@ -31,13 +31,16 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class Cell extends Pane {
 	private Plant myPlant;
 	private Tooltip tooltip;
-//	public static Random random = new Random();
+	private static AudioClip plantSound = new AudioClip(ClassLoader.getSystemResource("audio/Plant_Sound.wav").toString());
+
+	//	public static Random random = new Random();
 	private int c;
 	
 	public Cell() {
@@ -113,13 +116,16 @@ public class Cell extends Pane {
 			if (ControlPane.isShovel_On()) {
 				////remove plant and remove image
 				System.out.println("Try to remove plant");
+				plantSound.play(0.3);
 				this.removePlant();
+				
 			}
 		}
 	}
 	
 	public void changePlant(Plant myPlant) {
 		//call this to set plant
+		plantSound.play(0.3);
 		this.myPlant = myPlant;
 		String image_path = ClassLoader.getSystemResource(myPlant.getUrl()).toString();
 		changeGraphicPlant(image_path);

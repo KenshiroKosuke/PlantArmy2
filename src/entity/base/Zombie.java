@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import logic.Cell;
 import logic.FieldPane;
@@ -49,6 +50,8 @@ public abstract class Zombie {
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
 	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
 	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
+	private static AudioClip eatSound = new AudioClip(ClassLoader.getSystemResource("audio/Eat.mp3").toString());
+	private static AudioClip plantEatenSound = new AudioClip(ClassLoader.getSystemResource("audio/Plant_Eaten.mp3").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -254,10 +257,11 @@ public abstract class Zombie {
 			public void run() {
 				try {		
 					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead) {
-						Thread.sleep(400);
+						Thread.sleep(800);
 							if(eatingCell.getMyPlant()!=null) {
 								if(eatingCell.getMyPlant().getHp()>0) {
-									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 1);
+									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 2);
+									eatSound.play(0.4);
 									//////////////////////////////////////////////////////////////
 									System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
 									//////////////////////////////////////////////////////////////
@@ -279,6 +283,7 @@ public abstract class Zombie {
 //								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
 //									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
 //								}			
+								plantEatenSound.play(0.4);
 								eatingCell.removePlant();
 								isEating=false;
 								}

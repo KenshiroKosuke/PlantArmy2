@@ -8,6 +8,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import logic.FieldPane;
 import logic.GameController;
@@ -22,6 +23,7 @@ public class Pea {
 	private static final Image IMAGE_NORMAL_PEA= new Image(ClassLoader.getSystemResource("Pea.png").toString());
 	private static final Image IMAGE_SNOW_PEA =  new Image(ClassLoader.getSystemResource("SnowPea.png").toString());
 	private static final double PEA_WIDTH = IMAGE_NORMAL_PEA.getWidth();
+	private static AudioClip peaHitSound = new AudioClip(ClassLoader.getSystemResource("audio/Pea_Hit.mp3").toString());
 	public Pea(int x,int y,String type) {
 		this.speed = 12;
 		if(type.equals("snow")) {
@@ -46,6 +48,8 @@ public class Pea {
 					zombieLocation = (int) (zombie.getX()+Zombie.getWidth()/2);
 					if(zombieLocation>getX()&&zombieLocation<getX()+PEA_WIDTH ) {
 						collide = true;
+						peaHitSound.play(0.75);
+						setPeaDead(true);
 						zombie.damage();
 						if(shooter instanceof SnowPeaShooter) {
 							zombie.setFrozenFactor(1);
@@ -67,7 +71,6 @@ public class Pea {
 	                        snowEffect.setOpacity(0.4);
 	                        zombie.getImageView().setEffect(snowEffect);
 	                    }
-						setPeaDead(true);
 						break;
 					}
 				}

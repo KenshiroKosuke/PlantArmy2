@@ -1,9 +1,16 @@
 package logic;
 
+import application.Main;
 import application.NormalMode;
+import javafx.application.Platform;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.Effect;
+import javafx.scene.paint.Color;
 
 public class ShopController {
-	private static int sun = 50000;
+	private static int sun = 500;
 	private static BuyPlantButton selectedButton;
 
 	public static int getSun() {
@@ -20,16 +27,20 @@ public class ShopController {
 	
 	public static void collectSun() {
 		ShopController.sun += 50;
-		//add code to update sun label
 	}
 	
 	public static void boughtPlant() {
 		setSun(sun-ShopController.getSelectedButton().getPlant().getPrice());
-		//add code to update sun label
-		if(ShopController.sun < ShopController.getSelectedButton().getPlant().getPrice()) {
-			ShopController.getSelectedButton().unhighlight();
-			ShopController.setSelectedButton(null);
-		}
+		selectedButton.fillButton(1.0);
+		selectedButton.setDisable(true);
+		Thread thread = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				selectedButton.unhighlight();
+				selectedButton.startRechargingTimer();
+			}
+		});
+		thread.start();
 	}
 
 	public static void setSun(int sun) {

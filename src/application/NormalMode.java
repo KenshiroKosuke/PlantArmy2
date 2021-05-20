@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.media.AudioClip;
 import logic.Cell;
 import logic.ControlPane;
 import logic.FieldPane;
@@ -29,6 +30,8 @@ public class NormalMode extends AnchorPane {
 	private static FieldPane field;
 	private static ShopPane shop;
 	private static ControlPane control;
+	private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
+	private static AudioClip zombieComingSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Is_coming.wav").toString());
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
@@ -50,6 +53,8 @@ public class NormalMode extends AnchorPane {
 		ammoReposition();
 		checkFire();
 		sunTimer();
+		gameMusic.setCycleCount(AudioClip.INDEFINITE);
+		//gameMusic.play();
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
@@ -59,6 +64,7 @@ public class NormalMode extends AnchorPane {
 					try {
 						if(GameController.getCurrentZombies().size()==0) {
 							Thread.sleep(2000);
+							zombieComingSound.play();
 							populateZombie();
 							System.out.println("new wave");
 						}
@@ -74,6 +80,10 @@ public class NormalMode extends AnchorPane {
 		thread.start();
 	}
 	
+	public static AudioClip getGameMusic() {
+		return gameMusic;
+	}
+
 	public void populateZombie() {
 		int enemyCount = 18+6*GameController.getLevel();
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
@@ -354,6 +364,10 @@ public class NormalMode extends AnchorPane {
 
 	public static void setControl(ControlPane control) {
 		NormalMode.control = control;
+	}
+
+	public static AudioClip getZombieComingSound() {
+		return zombieComingSound;
 	}
 	
 	
