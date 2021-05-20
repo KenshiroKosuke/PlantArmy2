@@ -76,6 +76,15 @@ public class GameController {
 			zombie.setDead(true);
 		}
 		GameController.getCurrentZombies().clear();
+		for (Shooter shooter:shooters) {
+			shooter.getPeaList().clear();
+		}
+		GameController.getShooters().clear();
+		GameController.getPeaToRemove().clear();
+		GameController.getSunProducers().clear();
+		GameController.setUpgrading(false);
+		ShopController.setSun(ShopController.getInitialSun());
+		ShopController.setSelectedButton(null);
 		Main.startMainMenu();
 		System.out.println("From Zombie.java : "+GameController.getCurrentZombies().size());
 	}

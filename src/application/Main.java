@@ -52,7 +52,7 @@ public class Main extends Application{
 				menuMusic.stop();
 				NormalMode.getGameMusic().stop();
 				NormalMode.getZombieComingSound().stop();
-				
+				GameController.setGameOver();
 			}
 		});
 		startMainMenu();
@@ -63,6 +63,7 @@ public class Main extends Application{
 	
 	public static void startGame(Scene normalModeScene) {
 		menuMusic.stop();
+		GameController.setIs_over(false);
 		primaryStage.setScene(normalModeScene);
 	}
 	

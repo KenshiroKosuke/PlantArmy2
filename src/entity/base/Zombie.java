@@ -215,7 +215,7 @@ public abstract class Zombie {
 	public void update() {
 		// TODO Auto-generated method stub
 		// +speed, x, y etc
-		if(!isDead) {
+		if(!isDead&&!GameController.is_over()) {
 			if(CheckPlantCollision()==1) {
 				//call eat method
 				System.out.println(CheckPlantCollision());
@@ -256,7 +256,7 @@ public abstract class Zombie {
 			@Override
 			public void run() {
 				try {		
-					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead) {
+					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead&&!GameController.is_over()) {
 						Thread.sleep(800);
 							if(eatingCell.getMyPlant()!=null) {
 								if(eatingCell.getMyPlant().getHp()>0) {

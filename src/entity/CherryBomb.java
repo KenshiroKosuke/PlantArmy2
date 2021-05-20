@@ -23,18 +23,20 @@ public class CherryBomb extends Plant implements Explodable{
 				int row,column;
 				try {
 					Thread.sleep(2200);
-					for(Zombie zombie:GameController.getCurrentZombies()) {
-						row = zombie.getRow();
-						column = zombie.checkGridXPosition();
-						if(row==getY()||row==getY()+1||row==getY()-1) {
-							if(column==getX()||column==getX()+1||column==getX()-1) {
-								zombie.zombieKill("exploded");
+					if(!GameController.is_over()) {
+						for(Zombie zombie:GameController.getCurrentZombies()) {
+							row = zombie.getRow();
+							column = zombie.checkGridXPosition();
+							if(row==getY()||row==getY()+1||row==getY()-1) {
+								if(column==getX()||column==getX()+1||column==getX()-1) {
+									zombie.zombieKill("exploded");
+								}
 							}
 						}
+						FieldPane fieldPane = NormalMode.getField();
+						Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
+						cell.removePlant();
 					}
-					FieldPane fieldPane = NormalMode.getField();
-					Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
-					cell.removePlant();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

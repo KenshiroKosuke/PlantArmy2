@@ -39,8 +39,8 @@ public class NormalMode extends AnchorPane {
 		BackgroundImage bgImg = new BackgroundImage(img, null, null, null, bgSize);
 		BackgroundImage[] bgImgA = {bgImg};
 		field = new FieldPane();
-		shop = new ShopPane();
 		control = new ControlPane();
+		shop = new ShopPane();
 		this.setBackground(new Background(null,bgImgA));
 		this.getChildren().add(field);
 		this.getChildren().add(shop);
@@ -155,7 +155,7 @@ public class NormalMode extends AnchorPane {
 	
 	private void updateZombieMovement(Zombie zombie) {
 		try {		
-			while(!zombie.isDead()) {
+			while(!zombie.isDead()&&!GameController.is_over()) {
 				Thread.sleep(50);
 					Platform.runLater(new Runnable() {
 						@Override
@@ -167,7 +167,9 @@ public class NormalMode extends AnchorPane {
 										public void run() {
 											try {
 												Thread.sleep(5520);
-												zombie.setDead(true);
+												if(!GameController.is_over()) {
+													zombie.setDead(true);
+												}
 											} catch (InterruptedException e) {
 												// TODO Auto-generated catch block
 												e.printStackTrace();
@@ -226,7 +228,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(50);
 						for(Shooter shooter:GameController.getShooters()) {
@@ -249,7 +251,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(50);
 						Platform.runLater(new Runnable() {
@@ -302,7 +304,7 @@ public class NormalMode extends AnchorPane {
 		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while(true) {
+				while(!GameController.is_over()) {
 					try {
 						Thread.sleep(1650);
 						for(SunProducer sunProducer : GameController.getSunProducers()) {
@@ -320,7 +322,7 @@ public class NormalMode extends AnchorPane {
 										sunProducer.setSunProduceTimer(0);
 										FieldPane fieldPane = NormalMode.getField();
 										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
-										String image_path = ClassLoader.getSystemResource("Sunflower.gif").toString();
+										String image_path = ClassLoader.getSystemResource(cell.getMyPlant().getName()+".gif").toString();
 										cell.changeGraphicPlant(image_path);
 									}
 								});
@@ -330,7 +332,7 @@ public class NormalMode extends AnchorPane {
 									public void run() {
 										FieldPane fieldPane = NormalMode.getField();
 										Cell cell = (Cell) (fieldPane.getChildren().get(sunProducer.getY()*9+sunProducer.getX()));	
-										String image_path = ClassLoader.getSystemResource("SunflowerGlow.gif").toString();
+										String image_path = ClassLoader.getSystemResource(cell.getMyPlant().getName()+"Glow.gif").toString();
 										cell.changeGraphicPlant(image_path);
 									}
 								});

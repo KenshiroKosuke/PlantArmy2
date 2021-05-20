@@ -65,7 +65,7 @@ public class BuyPlantButton extends Button {
 		ShopController.setSelectedButton(null);
 		System.out.println("start recharging");
 		time = 0;
-		while(true) {
+		while(!GameController.is_over()) {
 			try {
 				Thread.sleep(1000);
 				time += 1.0;

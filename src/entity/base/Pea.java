@@ -41,7 +41,7 @@ public class Pea {
 	public boolean checkZombieCollision(Shooter shooter) {
 		boolean collide = false;
 		int zombieLocation;
-		if(!isPeaDead) {
+		if(!isPeaDead&&!GameController.is_over()) {
 		for(Zombie zombie: GameController.getCurrentZombies()) {
 			if(!zombie.isExploded()) {
 				if(zombie.getRow()==shooter.getY()){
