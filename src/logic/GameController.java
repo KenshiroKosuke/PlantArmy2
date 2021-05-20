@@ -3,11 +3,13 @@ import java.util.ArrayList;
 
 import application.Main;
 import application.MainMenu;
+import application.NormalMode;
 import entity.base.Pea;
 import entity.base.Shooter;
 import entity.base.SunProducer;
 import entity.base.Zombie;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 
 public class GameController {
 	private static int gameMode = 0;
@@ -71,13 +73,19 @@ public class GameController {
 	public static void setGameOver() {
 		// TODO Auto-generated method stub
 		is_over = true;
-		//reset everything
+		//RESET ZOMBIE
 		for (Zombie zombie: CurrentZombies) {
 			zombie.setDead(true);
 		}
 		GameController.getCurrentZombies().clear();
+		//RESET BUTTON AND SHOPCONTROL BUTTON
+//		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
+//			button.setEffect(null); button.setTime(0); button.setDisable(false); button.setOpacity(1.0);
+//		}
+		ShopPane.getBuyPlantButtonList().clear();
+		System.out.println("From Zombie.java -> GameController.java : "+GameController.getCurrentZombies().size());	
+		ShopController.setSelectedButton(null);
 		Main.startMainMenu();
-		System.out.println("From Zombie.java : "+GameController.getCurrentZombies().size());
 	}
 	public static ArrayList<SunProducer> getSunProducers() {
 		return sunProducers;

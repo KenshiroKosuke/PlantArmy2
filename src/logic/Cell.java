@@ -47,10 +47,6 @@ public class Cell extends Pane {
 		this.setMinHeight(10);
 		this.setMinWidth(10);
 		this.setPadding(new Insets(10,0,0,0)); //top right bottom left
-		//this.myPlant = null;
-//		if (random.nextInt(10) > 8)
-//			setPlant(new Pea());
-//		this.setUpTooltip();
 		
 		this.addEventHandler(MouseEvent.MOUSE_CLICKED, 
 				new EventHandler<MouseEvent>() {

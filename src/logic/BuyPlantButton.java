@@ -73,6 +73,7 @@ public class BuyPlantButton extends Button {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
+						//If the game isn't over then fill the button
 						fillButton(1.0-(time/rechargingTime));
 					}
 				});
@@ -81,7 +82,7 @@ public class BuyPlantButton extends Button {
 				System.out.println("ERROR IN RECHARGING");
 				e.printStackTrace();
 			}
-			if (time >= rechargingTime || !Main.getPrimaryStage().isShowing()) {
+			if (time >= rechargingTime || !Main.getPrimaryStage().isShowing() ||  GameController.is_over()) {
 				this.setEffect(null);
 				this.setDisable(false);
 				break;
@@ -106,4 +107,17 @@ public class BuyPlantButton extends Button {
 	public double getRechargingTime() {
 		return rechargingTime;
 	}
+
+	public double getTime() {
+		return time;
+	}
+
+	public void setTime(double time) {
+		this.time = time;
+	}
+
+	public void setRechargingTime(double rechargingTime) {
+		this.rechargingTime = rechargingTime;
+	}
+	
 }

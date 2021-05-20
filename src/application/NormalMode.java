@@ -47,6 +47,7 @@ public class NormalMode extends AnchorPane {
 		this.setTopAnchor(shop, 66.0);
 		this.setLeftAnchor(shop, -3.0);
 		this.setTopAnchor(control, 10.0);
+		GameController.setIs_over(false);
 		ammoReposition();
 		checkFire();
 		sunTimer();
@@ -229,6 +230,7 @@ public class NormalMode extends AnchorPane {
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						System.out.println("error at NormalMode.checkFire");
 					}
 				}
 			}
@@ -258,7 +260,7 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		System.out.println(GameController.getPeaToRemove());
+		//System.out.println(GameController.getPeaToRemove());
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
 			if(pea.isPeaDead()) {
@@ -355,6 +357,13 @@ public class NormalMode extends AnchorPane {
 	public static void setControl(ControlPane control) {
 		NormalMode.control = control;
 	}
-	
+
+	public static ShopPane getShop() {
+		return shop;
+	}
+
+	public static void setShop(ShopPane shop) {
+		NormalMode.shop = shop;
+	}
 	
 }

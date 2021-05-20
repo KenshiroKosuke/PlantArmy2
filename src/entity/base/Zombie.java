@@ -58,11 +58,7 @@ public abstract class Zombie {
 	
 	public void createSprite() {
 		if(isDead) {
-			//zombie is now dead
 			imageView.setImage(null);
-			//animation.stop();
-			//dead image
-			//imageView = new ImageView(); 
 		}
 		else {
 			switch(name) {
@@ -71,9 +67,6 @@ public abstract class Zombie {
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
-		//imageView.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
-		//imageView.relocate((double)(getX()), (double)(getY()));
-		
 
 	}
 	public static int getWidth() {
@@ -240,8 +233,8 @@ public abstract class Zombie {
 				}
 			}
 		}
-		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0) {
-			// YOU LOSE
+		if(this.x-(Main.getWidth()-FieldPane.getFieldWidth()-100) < 0 && !GameController.is_over()) { 
+			// YOU LOSE. ZOMBIE ENTERS WHILE GAME IS NOT OVER
 			System.out.println("Zombie has arrived at our door!");
 			GameController.setGameOver();
 		}

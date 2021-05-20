@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Blend;
@@ -31,6 +32,7 @@ public class ShopPane extends GridPane{
 		//add other plants here
 		int i = 0;
 		for (BuyPlantButton button : buyPlantButtonList) {
+			System.out.println(button.getOnMouseClicked());
 			setSwitchEnable(button);
 			button.addEventHandler(MouseEvent.MOUSE_CLICKED, 
 				new EventHandler<MouseEvent>() {
@@ -40,7 +42,7 @@ public class ShopPane extends GridPane{
 						if(!GameController.isUpgrading()) {
 							if (ShopController.getSelectedButton() != null) {
 								if (ShopController.getSelectedButton().getPlant() == button.getPlant()) {
-									System.out.println("unselect");
+									System.out.println("unselect: "+button.getPlant().getName());
 									ShopController.getSelectedButton().unhighlight();
 									ShopController.setSelectedButton(null);
 								} else {
@@ -49,7 +51,7 @@ public class ShopPane extends GridPane{
 								}
 							} else if (ShopController.getSun() >= button.getPlant().getPrice()) {
 								//can be selected with current sun
-								System.out.println("set new button");
+								System.out.println("set new button: "+button.getPlant().getName());
 								setSelectedButton(button);
 							}
 						}
@@ -83,34 +85,21 @@ public class ShopPane extends GridPane{
 					}
 			});
 	}
+
+	public static ObservableList<BuyPlantButton> getBuyPlantButtonList() {
+		return buyPlantButtonList;
+	}
+
+	public static void setBuyPlantButtonList(ObservableList<BuyPlantButton> buyPlantButtonList) {
+		ShopPane.buyPlantButtonList = buyPlantButtonList;
+	}
+
+	public static int getTimer() {
+		return timer;
+	}
+
+	public static void setTimer(int timer) {
+		ShopPane.timer = timer;
+	}
 	
-//	public void updateButtonStatus() {
-//		Thread thread = new Thread(new Runnable(){
-//			@Override
-//			public void run() {
-//				while(true) {
-//					try {
-//						Thread.sleep(1000);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					timer++;
-//					for (BuyPlantButton button : buyPlantButtonList) {
-//						
-//					}
-//				}
-//			}
-//		});
-//		thread.start();
-//	}
-	
-//	public static BuyPlantButton getButton(Plant plant) {
-//		for (BuyPlantButton button : buyPlantButtonList) {
-//			if (button.getPlant().getName() == plant.getName()) {
-//				return button;
-//			}
-//		} 
-//		return null;
-//	}
 }
