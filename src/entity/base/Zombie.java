@@ -271,14 +271,14 @@ public abstract class Zombie {
 										});
 									}
 								}else {
-								if(eatingCell.getMyPlant() instanceof Shooter) {
-									GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
-									for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
-										GameController.getPeaToRemove().add(pea);
-									}
-								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
-									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
-								}			
+//								if(eatingCell.getMyPlant() instanceof Shooter) {
+//									GameController.removeShooterFromList((Shooter)eatingCell.getMyPlant());
+//									for(Pea pea: ((Shooter)eatingCell.getMyPlant()).getPeaList()) {
+//										GameController.getPeaToRemove().add(pea);
+//									}
+//								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
+//									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
+//								}			
 								eatingCell.removePlant();
 								isEating=false;
 								}

@@ -21,7 +21,6 @@ public class Sunflower extends SunProducer implements Upgradeable{
 			System.out.println("upgraded");
 			FieldPane fieldPane = NormalMode.getField();
 			Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
-			GameController.getSunProducers().remove((SunProducer) cell.getMyPlant());
 			cell.removePlant();
 			cell.changePlant(new TwinSunflower());
 			cell.getMyPlant().setX(FieldPane.getColumnIndex(cell));

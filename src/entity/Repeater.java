@@ -27,10 +27,6 @@ public class Repeater extends Shooter implements Upgradeable {
 			FieldPane fieldPane = NormalMode.getField();
 			Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
 			Shooter shooter = (Shooter) cell.getMyPlant();
-			GameController.getShooters().remove(shooter);
-			for(Pea pea: shooter.getPeaList()) {
-				GameController.getPeaToRemove().add(pea);
-			}
 			cell.removePlant();
 			cell.changePlant(new GatlingPea());
 			cell.getMyPlant().setX(FieldPane.getColumnIndex(cell));

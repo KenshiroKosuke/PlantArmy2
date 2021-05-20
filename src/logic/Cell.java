@@ -17,6 +17,7 @@ import entity.base.Upgradeable;
 import entity.base.sunProducable;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -155,10 +156,18 @@ public class Cell extends Pane {
 	}
 
 	public void removePlant() {
+		if(myPlant instanceof Shooter) {
+			GameController.removeShooterFromList((Shooter)myPlant);
+			for(Pea pea: ((Shooter)myPlant).getPeaList()) {
+				GameController.getPeaToRemove().add(pea);
+			}
+		}else if(myPlant instanceof SunProducer) {
+			GameController.getSunProducers().remove((SunProducer) myPlant);
+		}		
 		myPlant = null;
 		this.setBackground(null);
 	}
-
+	
 	public String getPlantImage() {
 		return getPlantImage();
 	}
