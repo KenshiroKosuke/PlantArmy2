@@ -66,8 +66,9 @@ public class NormalMode extends AnchorPane {
 						if(GameController.getCurrentZombies().size()==0) {
 							Thread.sleep(2000);
 							zombieComingSound.play();
-							populateZombie();
-							System.out.println("new wave");
+							populateZombie(GameController.getWaveType());
+							System.out.println("New wave");
+							System.out.println("Wave "+GameController.getWave()+" type "+GameController.getWaveType());
 						}
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -85,11 +86,12 @@ public class NormalMode extends AnchorPane {
 		return gameMusic;
 	}
 
-	public void populateZombie() {
-		int enemyCount = 18+6*GameController.getLevel();
+	public void populateZombie(int waveType) {
+		int enemyCount = 12+6*GameController.getWave();
+		GameController.setZombieCount(enemyCount);
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
 		//setting the chance of getting rare Zombie
-		switch(GameController.getLevel()) {
+		switch(GameController.getWave()) {
 		case 1:
 			rare = 0.8; rarer = 1.0; rarest = 2.0;
 			break;
@@ -117,12 +119,18 @@ public class NormalMode extends AnchorPane {
 			if (special < rare) {
 				NormalZombie zombie = new NormalZombie();
 				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setHp(30);
 			} else if (special < rarer) {
 				ConeZombie zombie = new ConeZombie();
 				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setSpeed(4);
 			} else if (special < rarest) {
 				NormalZombie zombie = new NormalZombie();
 				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setSpeed(3);
 			}
 		}
 		System.out.println("From populate : "+GameController.getCurrentZombies().size());
@@ -131,7 +139,7 @@ public class NormalMode extends AnchorPane {
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
-		zombie.setX((int) ((Main.getWidth()+6*code*FieldPane.getFieldWidth()/9))); //1032-81*i
+		zombie.setX((int) ((Main.getWidth()+200+row+6*code*FieldPane.getFieldWidth()/9)-code*code*(GameController.getWave()+GameController.getWaveType()+1))); //1032-81*i
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")

@@ -7,7 +7,7 @@ import logic.Cell;
 public class Walnut extends Plant{
 
 	public Walnut() {
-		super(30, "Walnut");
+		super(50, "Walnut");
 	}
 
 //	public void update() {

@@ -13,7 +13,9 @@ import javafx.scene.input.MouseEvent;
 
 public class GameController {
 	private static int gameMode = 0;
-	private static int level = 1;
+	private static int wave = 1;
+	private static int waveType = 0;
+	private static int zombieCount = 24;
 	private static boolean is_over = false;
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
@@ -21,17 +23,23 @@ public class GameController {
 	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
 	private static boolean isUpgrading = false;
 	
+	public static int getZombieCount() {
+		return zombieCount;
+	}
+	public static void setZombieCount(int zombieCount) {
+		GameController.zombieCount = zombieCount;
+	}
 	public static int getGameMode() {
 		return gameMode;
 	}
 	public static void setGameMode(int gameMode) {
 		GameController.gameMode = gameMode;
 	}
-	public static int getLevel() {
-		return level;
+	public static int getWave() {
+		return wave;
 	}
-	public static void setLevel(int level) {
-		GameController.level = level;
+	public static void setWave(int wave) {
+		GameController.wave = wave;
 	}
 	public static boolean is_over() {
 		return is_over;
@@ -84,10 +92,15 @@ public class GameController {
 		for (Shooter shooter:shooters) {
 			shooter.getPeaList().clear();
 		}
+		
+		//RESET CONTROLLER
 		GameController.getShooters().clear();
 		GameController.getPeaToRemove().clear();
 		GameController.getSunProducers().clear();
 		GameController.setUpgrading(false);
+		waveType = 0;
+		wave = 1;
+		zombieCount = 0;
 		
 		//RESET BUTTON AND SHOPCONTROL BUTTON
 //		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
@@ -118,6 +131,17 @@ public class GameController {
 		UpgradeButton.resetUpgradeButton();
 		ControlPane.resetShovel();
 		ShopPane.resetButtonsBackGroundColor();
+	}
+	public static int getWaveType() {
+		// TODO Auto-generated method stub
+		return waveType;
+	}
+	public static void changeWaveType() {
+		// TODO Auto-generated method stub
+		if (waveType == 1)
+			waveType = 0;
+		else
+			waveType = 1;
 	}
 	
 //	public static void changeLevel() {

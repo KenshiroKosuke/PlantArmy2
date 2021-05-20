@@ -114,8 +114,9 @@ public abstract class Zombie {
 			}
 		} catch (IndexOutOfBoundsException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Zombie has arrived at our door!");
-			GameController.setGameOver();
+			System.out.println("Zombie has arrived at your door!");
+			if (GameController.is_over() == true)
+				GameController.setGameOver();
 		}
 		return 0;
 	}
@@ -135,6 +136,15 @@ public abstract class Zombie {
 			//code for bombed
 			setHeight(160);
 			setExploded(true);
+		}
+		GameController.setZombieCount(GameController.getZombieCount()-1);
+		System.out.println(GameController.getCurrentZombies().size());
+		System.out.println(GameController.getZombieCount());
+		if (GameController.getZombieCount() == 0) {
+			if (GameController.getWaveType()==1)
+				GameController.setWave(GameController.getWave()+1);
+			GameController.changeWaveType();
+			GameController.getCurrentZombies().clear();
 		}
 	}
 	public static Image getImageExplodedZombie() {
