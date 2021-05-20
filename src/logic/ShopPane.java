@@ -61,7 +61,7 @@ public class ShopPane extends GridPane{
 			this.add(button,0,i );
 			i++;
 		}
-		this.add(new UpgradeButton(),0,i);
+		this.add(new UpgradeButton(),1,5);
 	}
 	
 	public void setSelectedButton(BuyPlantButton selectedButton) {

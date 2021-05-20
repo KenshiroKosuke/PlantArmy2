@@ -114,22 +114,15 @@ public class NormalMode extends AnchorPane {
 		for (int i=0; i<enemyCount; i++) {
 			double special = rand.nextDouble();
 			System.out.println(i+" "+special);
-			if (i<65*enemyCount/100) {
-				//wave1
-				if (special < rare) {
-					NormalZombie zombie = new NormalZombie();
-					//75+98*(int) Math.ceil(special)
-					initalizeNewZombie(i, zombie);
-				} else if (special < rarer) {
-					ConeZombie zombie = new ConeZombie();
-					initalizeNewZombie(i, zombie);
-				} else if (special < rarest) {
-					NormalZombie zombie = new NormalZombie();
-					initalizeNewZombie(i, zombie);
-				}
-			} else if (i > 65*enemyCount/100) {
-				//wave2
-				
+			if (special < rare) {
+				NormalZombie zombie = new NormalZombie();
+				initalizeNewZombie(i, zombie);
+			} else if (special < rarer) {
+				ConeZombie zombie = new ConeZombie();
+				initalizeNewZombie(i, zombie);
+			} else if (special < rarest) {
+				NormalZombie zombie = new NormalZombie();
+				initalizeNewZombie(i, zombie);
 			}
 		}
 		System.out.println("From populate : "+GameController.getCurrentZombies().size());
@@ -138,7 +131,7 @@ public class NormalMode extends AnchorPane {
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
-		zombie.setX((int) ((Main.getWidth()+1.2*code*FieldPane.getFieldWidth()/9))); //1032-81*i
+		zombie.setX((int) ((Main.getWidth()+6*code*FieldPane.getFieldWidth()/9))); //1032-81*i
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
@@ -271,7 +264,7 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		System.out.println(GameController.getPeaToRemove());
+		//System.out.println(GameController.getPeaToRemove());
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
 			if(pea.isPeaDead()) {

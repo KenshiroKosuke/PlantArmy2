@@ -52,7 +52,9 @@ public class Main extends Application{
 				menuMusic.stop();
 				NormalMode.getGameMusic().stop();
 				NormalMode.getZombieComingSound().stop();
-				GameController.setGameOver();
+				Platform.exit();
+		        System.exit(0);
+				//GameController.setGameOver();
 			}
 		});
 		startMainMenu();
