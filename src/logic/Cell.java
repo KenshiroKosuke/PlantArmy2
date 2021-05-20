@@ -70,7 +70,7 @@ public class Cell extends Pane {
 		if(GameController.isUpgrading()) {
 			if(myPlant instanceof Upgradeable) {
 				((Upgradeable) myPlant).upgrade();
-				GameController.setUpgrading(false);
+				UpgradeButton.resetUpgradeButton();
 			}
 		}else {
 			if (ShopController.getSelectedButton() != null) {

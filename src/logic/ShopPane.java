@@ -1,5 +1,6 @@
 package logic;
 
+import application.Main;
 import entity.base.Plant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,12 +8,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class ShopPane extends GridPane{
@@ -20,7 +23,7 @@ public class ShopPane extends GridPane{
 	private static int timer = 0;
 	public ShopPane() {
 		this.setAlignment(Pos.CENTER);
-		this.setHgap(10);
+		this.setHgap(5);
 		this.setVgap(0);
 		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"),
 								  new BuyPlantButton("Sunflower"),
@@ -82,6 +85,9 @@ public class ShopPane extends GridPane{
 						// TODO fill in this method					
 						if (ControlPane.isShovel_On())
 							ControlPane.resetShovel();
+						else if (GameController.isUpgrading())
+							UpgradeButton.resetUpgradeButton();
+						
 					}
 			});
 	}

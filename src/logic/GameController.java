@@ -114,6 +114,12 @@ public class GameController {
 		GameController.isUpgrading = isUpgrading;
 	}
 	
+	public static void resetAnyButton() {
+		UpgradeButton.resetUpgradeButton();
+		ControlPane.resetShovel();
+		ShopPane.resetButtonsBackGroundColor();
+	}
+	
 //	public static void changeLevel() {
 //		level += 1;
 //		changeScene();
