@@ -139,7 +139,11 @@ public class NormalMode extends AnchorPane {
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
-		zombie.setX((int) ((Main.getWidth()+200+row+6*code*FieldPane.getFieldWidth()/9)-code*code*(GameController.getWave()+GameController.getWaveType()+1))); //1032-81*i
+		double factor = rand.nextDouble();
+		if (GameController.getWaveType() ==0)
+			zombie.setX((int) (Main.getWidth()+150+code*240-22*factor*GameController.getWave()));
+		else
+			zombie.setX((int) (Main.getWidth()+550+code*310-(factor-0.3)*code*(-0.4+0.4*GameController.getWave()+GameController.getWaveType())));
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
