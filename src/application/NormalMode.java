@@ -75,7 +75,7 @@ public class NormalMode extends AnchorPane {
 							if (GameController.getWaveType()==1)
 								GameController.setWave(GameController.getWave()+1);
 							GameController.changeWaveType();
-							if(GameController.getWave() == 1) {
+							if(GameController.getWave() == 6) {
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -107,7 +107,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void populateZombie(int waveType) {
-		int enemyCount = 1;//2+6*GameController.getWave();
+		int enemyCount = 2+6*GameController.getWave();
 		GameController.setZombieCount(enemyCount);
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
 		//setting the chance of getting rare Zombie
