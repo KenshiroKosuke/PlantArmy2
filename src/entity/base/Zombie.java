@@ -64,7 +64,7 @@ public abstract class Zombie {
 			switch(name) {
 			case "NormalZombie" : imageView = new ImageView(IMAGE_NORMAL_ZOMBIE); height=130; break	;
 			case "ConeZombie"	: imageView = new ImageView(IMAGE_CONE_ZOMBIE); height = 160; break	;
-			case "BucketZombie"	: imageView = new ImageView(IMAGE_BUCKET_ZOMBIE); height = 160; break	;
+			case "BucketZombie"	: imageView = new ImageView(IMAGE_BUCKET_ZOMBIE); height = 140; break	;
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
@@ -122,7 +122,6 @@ public abstract class Zombie {
 	public void zombieKill(String S) {
 		if(S.equals("normal")) {
 			setDead(true);
-			//GameController.getCurrentZombies().remove(this);
 		}else if(S.equals("exploded")) {
 			//code for bombed
 			setHeight(160);
@@ -132,13 +131,18 @@ public abstract class Zombie {
 		GameController.setKillCount(GameController.getKillCount()+1);
 		System.out.println(GameController.getKillCount());
 		GameController.setZombieCount(GameController.getZombieCount()-1);
-		System.out.println(GameController.getCurrentZombies().size());
-		System.out.println(GameController.getZombieCount());
-		if (GameController.getZombieCount() == 0) {
+		//System.out.println(GameController.getZombieCount());
+		
+		if (GameController.getCurrentZombies().size() == 1) {
+			System.out.println("new wave from zombie");
+			GameController.getCurrentZombies().remove(this);
+			System.out.println("ZOMBIES LEFT: "+GameController.getCurrentZombies().size());
 			if (GameController.getWaveType()==1)
 				GameController.setWave(GameController.getWave()+1);
 			GameController.changeWaveType();
-			GameController.getCurrentZombies().clear();
+		} else {
+			GameController.getCurrentZombies().remove(this);
+			System.out.println("ZOMBIES LEFT: "+GameController.getCurrentZombies().size());
 		}
 	}
 	public static Image getImageExplodedZombie() {
@@ -222,7 +226,6 @@ public abstract class Zombie {
 		if(!isDead&&!GameController.is_over()) {
 			if(CheckPlantCollision()==1) {
 				//call eat method
-				System.out.println(CheckPlantCollision());
 				if(!isEating)
 					eat();
 			}else if(CheckPlantCollision()==2) {
@@ -233,7 +236,6 @@ public abstract class Zombie {
 				}else {
 					this.x -= (this.speed-frozenFactor/2);
 				}
-				System.out.println(CheckPlantCollision());
 
 			}else {
 				this.x -= (this.speed-frozenFactor/2);

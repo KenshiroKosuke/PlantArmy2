@@ -41,8 +41,10 @@ public class Main extends Application{
 	//private static NormalMode normalMode = new NormalMode();
 	private static Scene normalModeScene;
 	private static Scene gameOverScene;
+	private static Scene gameClearScene;
 	private static AudioClip menuMusic = new AudioClip(ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
 	private static AudioClip gameOverSound = new AudioClip(ClassLoader.getSystemResource("audio/LoseMusic.mp3").toString());
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -96,6 +98,14 @@ public class Main extends Application{
 		gameOverScene = new Scene(gameOver, WIDTH, HEIGHT);
 		gameOverSound.play();
 		primaryStage.setScene(gameOverScene);
+	}
+	public static void goToGameClearScreen() {
+		NormalMode.getGameMusic().stop();
+		NormalMode.getZombieComingSound().stop();
+		GameClear gameClear = new GameClear();
+		gameClearScene = new Scene(gameClear, WIDTH, HEIGHT);
+		//gameClearSound.play();
+		primaryStage.setScene(gameClearScene);
 	}
 	public static int getHeight() {
 		return HEIGHT;

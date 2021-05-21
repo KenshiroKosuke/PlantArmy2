@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.ConcurrentModificationException;
+
 import application.NormalMode;
 import entity.base.Explodable;
 import entity.base.Plant;
@@ -42,9 +44,15 @@ public class CherryBomb extends Plant implements Explodable{
 					FieldPane fieldPane = NormalMode.getField();
 					Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
 					cell.removePlant();
-				} catch (InterruptedException e) {
+				} catch (ConcurrentModificationException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					FieldPane fieldPane = NormalMode.getField();
+					Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
+					cell.removePlant();
+				} catch (InterruptedException e) {
+					FieldPane fieldPane = NormalMode.getField();
+					Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
+					cell.removePlant();
 				}
 			}
 		});

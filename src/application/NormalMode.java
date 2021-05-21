@@ -65,6 +65,9 @@ public class NormalMode extends AnchorPane {
 				// TODO Auto-generated method stub
 				while(!GameController.is_over()) {
 					try {
+						if(GameController.getWave() == 6) {
+							GameController.setGameWin();
+						}
 						if(GameController.getCurrentZombies().size()==0) {
 							Thread.sleep(2000);
 							zombieComingSound.play();
@@ -94,16 +97,16 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void populateZombie(int waveType) {
-		int enemyCount = 12+6*GameController.getWave();
+		int enemyCount = 2+6*GameController.getWave();
 		GameController.setZombieCount(enemyCount);
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
 		//setting the chance of getting rare Zombie
 		switch(GameController.getWave()) {
 		case 1:
-			rare = 0.85; rarer = 1.0; rarest = 2.0;
+			rare = 0.9; rarer = 0.98; rarest = 1.0;
 			break;
 		case 2:
-			rare = 0.8; rarer = 0.92; rarest = 1.0;
+			rare = 0.82; rarer = 0.92; rarest = 1.0;
 			break;
 		case 3:
 			rare = 0.67; rarer = 0.87; rarest = 1.0;
@@ -112,7 +115,7 @@ public class NormalMode extends AnchorPane {
 			rare = 0.6; rarer = 0.75; rarest = 1.0;
 			break;
 		case 5:
-			rare = 0.34; rarer = 0.68; rarest = 1.0;
+			rare = 0.5; rarer = 0.72; rarest = 1.0;
 		case 6:
 			Platform.exit();
 	        System.exit(0);
@@ -128,22 +131,26 @@ public class NormalMode extends AnchorPane {
 			if (special < rare) {
 				NormalZombie zombie = new NormalZombie();
 				initalizeNewZombie(i, zombie);
-				if (waveType == 1)
-					zombie.setHp(25+GameController.getWave()*5);
+				if (waveType == 1) {
+					zombie.setHp(zombie.getHp()+GameController.getWave()*2);
+					zombie.setSpeed(zombie.getSpeed()+0.4*GameController.getWave());
+				}
 			} else if (special < rarer) {
 				ConeZombie zombie = new ConeZombie();
 				initalizeNewZombie(i, zombie);
-				if (waveType == 1)
-					zombie.setSpeed(zombie.getSpeed()+0.4*GameController.getWave());
+				if (waveType == 1) {
+					zombie.setHp(zombie.getHp()+GameController.getWave()*3);
+				}
 			} else if (special < rarest) {
 				BucketZombie zombie = new BucketZombie();
 				initalizeNewZombie(i, zombie);
-				if (waveType == 1)
-					zombie.setSpeed(zombie.getSpeed()+0.4*GameController.getWave());
+				if (waveType == 1) {
+					zombie.setSpeed(zombie.getSpeed()+0.3*GameController.getWave());
+					zombie.setHp(zombie.getHp()+GameController.getWave()*4);
+				};
 			}
 		}
 		System.out.println("From populate : "+GameController.getCurrentZombies().size());
-		System.out.println("Wave "+GameController.getWave()+"."+GameController.getWaveType());
 	}
 	
 	protected void initalizeNewZombie(int code, Zombie zombie) {
@@ -151,13 +158,17 @@ public class NormalMode extends AnchorPane {
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
 		double factor = rand.nextDouble();
 		if (GameController.getWaveType() ==1)
-			zombie.setX((int) (Main.getWidth()+150+code*240-22*factor*GameController.getWave()));
+			zombie.setX((int) (Main.getWidth()+150+code*(200-GameController.getWave()*25)-30*factor*GameController.getWave()));
 		else
-			zombie.setX((int) (Main.getWidth()+350+code*350-(factor-0.4)*code*(-0.4+0.4*GameController.getWave())));
+			zombie.setX((int) (Main.getWidth()+350+code*(270-GameController.getWave()*20)-factor*20*GameController.getWave()));
+		//(GameController.getWave()-3)*
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
 			zombie.setY((int) (5+(row*FieldPane.getFieldHeight())/5));
+		else if (zombie.getName() == "BucketZombie")
+			zombie.setY((int) (25+(row*FieldPane.getFieldHeight())/5));
+		
 		zombie.setRow(row);
 		Thread thread = new Thread(new Runnable(){
 			@Override
@@ -234,7 +245,7 @@ public class NormalMode extends AnchorPane {
 				getChildren().remove(zombieImageView);
 			}			
 		});
-	    GameController.getCurrentZombies().remove(zombie);
+	    //GameController.getCurrentZombies().remove(zombie);
 
 	}
 	public static FieldPane getField() {
@@ -386,6 +397,15 @@ public class NormalMode extends AnchorPane {
 	public static AudioClip getZombieComingSound() {
 		return zombieComingSound;
 	}
+
+	public static ShopPane getShop() {
+		return shop;
+	}
+
+	public static void setShop(ShopPane shop) {
+		NormalMode.shop = shop;
+	}
+	
 	
 	
 }

@@ -79,10 +79,9 @@ public class GameController {
 	public static void setPeaToRemove(ArrayList<Pea> peaToRemove) {
 		GameController.peaToRemove = peaToRemove;
 	}
-	public static void setGameOver() {
-		
+	
+	public static void endGame() {
 		is_over = true;
-		
 		//RESET ZOMBIE
 		for (Zombie zombie: CurrentZombies) {
 			zombie.setDead(true);
@@ -113,6 +112,15 @@ public class GameController {
 		System.out.println("From Zombie.java -> GameController.java : "+GameController.getCurrentZombies().size());	
 		ShopController.setSelectedButton(null);
 		
+	}
+	
+	public static void setGameWin() {
+		endGame();
+		//Main.goToGameClearScreen();
+	}
+	
+	public static void setGameOver() {
+		endGame();
 		Main.goToGameOverScreen();
 	}
 	public static ArrayList<SunProducer> getSunProducers() {
