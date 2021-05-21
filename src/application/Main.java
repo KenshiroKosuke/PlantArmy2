@@ -40,7 +40,9 @@ public class Main extends Application{
 	private static Scene mainMenuScene;
 	//private static NormalMode normalMode = new NormalMode();
 	private static Scene normalModeScene;
+	private static Scene gameOverScene;
 	private static AudioClip menuMusic = new AudioClip(ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
+	private static AudioClip gameOverSound = new AudioClip(ClassLoader.getSystemResource("audio/LoseMusic.mp3").toString());
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -52,7 +54,10 @@ public class Main extends Application{
 				menuMusic.stop();
 				NormalMode.getGameMusic().stop();
 				NormalMode.getZombieComingSound().stop();
-				GameController.setGameOver();
+				gameOverSound.stop();
+				Platform.exit();
+		        System.exit(0);
+				//GameController.setGameOver();
 			}
 		});
 		startMainMenu();
@@ -63,7 +68,6 @@ public class Main extends Application{
 	
 	public static void startGame(Scene normalModeScene) {
 		menuMusic.stop();
-		GameController.setIs_over(false);
 		primaryStage.setScene(normalModeScene);
 	}
 	
@@ -107,7 +111,14 @@ public class Main extends Application{
 		primaryStage.setTitle("Plant Army");
 		primaryStage.setScene(mainMenuScene);
 	}
-
+	public static void goToGameOverScreen() {
+		NormalMode.getGameMusic().stop();
+		NormalMode.getZombieComingSound().stop();
+		GameOver gameOver = new GameOver();
+		gameOverScene = new Scene(gameOver, WIDTH, HEIGHT);
+		gameOverSound.play();
+		primaryStage.setScene(gameOverScene);
+	}
 	public static int getHeight() {
 		return HEIGHT;
 	}
@@ -140,6 +151,10 @@ public class Main extends Application{
 
 	public static void setPrimaryStage(Stage primaryStage) {
 		Main.primaryStage = primaryStage;
+	}
+
+	public static AudioClip getGameOverSound() {
+		return gameOverSound;
 	}
 
 }

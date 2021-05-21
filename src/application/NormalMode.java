@@ -32,6 +32,7 @@ public class NormalMode extends AnchorPane {
 	private static ControlPane control;
 	private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
 	private static AudioClip zombieComingSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Is_coming.wav").toString());
+	private static AudioClip zombieGroanSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Groan.wav").toString());
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
@@ -50,11 +51,12 @@ public class NormalMode extends AnchorPane {
 		this.setTopAnchor(shop, 66.0);
 		this.setLeftAnchor(shop, -3.0);
 		this.setTopAnchor(control, 10.0);
+		GameController.setIs_over(false);
 		ammoReposition();
 		checkFire();
 		sunTimer();
 		gameMusic.setCycleCount(AudioClip.INDEFINITE);
-		//gameMusic.play();
+		gameMusic.play();
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
@@ -65,8 +67,14 @@ public class NormalMode extends AnchorPane {
 						if(GameController.getCurrentZombies().size()==0) {
 							Thread.sleep(2000);
 							zombieComingSound.play();
-							populateZombie();
-							System.out.println("new wave");
+							populateZombie(GameController.getWaveType());
+							System.out.println("New wave");
+							System.out.println("Wave "+GameController.getWave()+" type "+GameController.getWaveType());
+						}
+						Random rand = new Random();
+						if(rand.nextDouble()<0.05) {
+							zombieGroanSound.play();
+							System.out.println("groaned");
 						}
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -84,11 +92,12 @@ public class NormalMode extends AnchorPane {
 		return gameMusic;
 	}
 
-	public void populateZombie() {
-		int enemyCount = 18+6*GameController.getLevel();
+	public void populateZombie(int waveType) {
+		int enemyCount = 12+6*GameController.getWave();
+		GameController.setZombieCount(enemyCount);
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
 		//setting the chance of getting rare Zombie
-		switch(GameController.getLevel()) {
+		switch(GameController.getWave()) {
 		case 1:
 			rare = 0.8; rarer = 1.0; rarest = 2.0;
 			break;
@@ -113,22 +122,21 @@ public class NormalMode extends AnchorPane {
 		for (int i=0; i<enemyCount; i++) {
 			double special = rand.nextDouble();
 			System.out.println(i+" "+special);
-			if (i<65*enemyCount/100) {
-				//wave1
-				if (special < rare) {
-					NormalZombie zombie = new NormalZombie();
-					//75+98*(int) Math.ceil(special)
-					initalizeNewZombie(i, zombie);
-				} else if (special < rarer) {
-					ConeZombie zombie = new ConeZombie();
-					initalizeNewZombie(i, zombie);
-				} else if (special < rarest) {
-					NormalZombie zombie = new NormalZombie();
-					initalizeNewZombie(i, zombie);
-				}
-			} else if (i > 65*enemyCount/100) {
-				//wave2
-				
+			if (special < rare) {
+				NormalZombie zombie = new NormalZombie();
+				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setHp(30);
+			} else if (special < rarer) {
+				ConeZombie zombie = new ConeZombie();
+				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setSpeed(4);
+			} else if (special < rarest) {
+				NormalZombie zombie = new NormalZombie();
+				initalizeNewZombie(i, zombie);
+				if (waveType == 1)
+					zombie.setSpeed(3);
 			}
 		}
 		System.out.println("From populate : "+GameController.getCurrentZombies().size());
@@ -137,7 +145,11 @@ public class NormalMode extends AnchorPane {
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
-		zombie.setX((int) ((Main.getWidth()+1.2*code*FieldPane.getFieldWidth()/9))); //1032-81*i
+		double factor = rand.nextDouble();
+		if (GameController.getWaveType() ==0)
+			zombie.setX((int) (Main.getWidth()+150+code*240-22*factor*GameController.getWave()));
+		else
+			zombie.setX((int) (Main.getWidth()+550+code*310-(factor-0.3)*code*(-0.4+0.4*GameController.getWave()+GameController.getWaveType())));
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")
@@ -232,7 +244,7 @@ public class NormalMode extends AnchorPane {
 					try {
 						Thread.sleep(50);
 						for(Shooter shooter:GameController.getShooters()) {
-							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()) {
+							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()&&shooter.getHp()>0) {
 								shooter.startShooting();
 								shooter.setShot(true);
 							}
@@ -270,7 +282,6 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		System.out.println(GameController.getPeaToRemove());
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
 			if(pea.isPeaDead()) {

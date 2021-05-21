@@ -1,17 +1,21 @@
 package logic;
 
+import application.Main;
 import entity.base.Plant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class ShopPane extends GridPane{
@@ -19,7 +23,7 @@ public class ShopPane extends GridPane{
 	private static int timer = 0;
 	public ShopPane() {
 		this.setAlignment(Pos.CENTER);
-		this.setHgap(10);
+		this.setHgap(5);
 		this.setVgap(0);
 		buyPlantButtonList.addAll(new BuyPlantButton("PeaShooter"),
 								  new BuyPlantButton("Sunflower"),
@@ -31,6 +35,7 @@ public class ShopPane extends GridPane{
 		//add other plants here
 		int i = 0;
 		for (BuyPlantButton button : buyPlantButtonList) {
+			System.out.println(button.getOnMouseClicked());
 			setSwitchEnable(button);
 			button.addEventHandler(MouseEvent.MOUSE_CLICKED, 
 				new EventHandler<MouseEvent>() {
@@ -40,7 +45,7 @@ public class ShopPane extends GridPane{
 						if(!GameController.isUpgrading()) {
 							if (ShopController.getSelectedButton() != null) {
 								if (ShopController.getSelectedButton().getPlant() == button.getPlant()) {
-									System.out.println("unselect");
+									System.out.println("unselect: "+button.getPlant().getName());
 									ShopController.getSelectedButton().unhighlight();
 									ShopController.setSelectedButton(null);
 								} else {
@@ -49,7 +54,7 @@ public class ShopPane extends GridPane{
 								}
 							} else if (ShopController.getSun() >= button.getPlant().getPrice()) {
 								//can be selected with current sun
-								System.out.println("set new button");
+								System.out.println("set new button: "+button.getPlant().getName());
 								setSelectedButton(button);
 							}
 						}
@@ -59,7 +64,7 @@ public class ShopPane extends GridPane{
 			this.add(button,0,i );
 			i++;
 		}
-		this.add(new UpgradeButton(),0,i);
+		this.add(new UpgradeButton(),1,5);
 	}
 	
 	public void setSelectedButton(BuyPlantButton selectedButton) {
@@ -80,7 +85,27 @@ public class ShopPane extends GridPane{
 						// TODO fill in this method					
 						if (ControlPane.isShovel_On())
 							ControlPane.resetShovel();
+						else if (GameController.isUpgrading())
+							UpgradeButton.resetUpgradeButton();
+						
 					}
 			});
 	}
+
+	public static ObservableList<BuyPlantButton> getBuyPlantButtonList() {
+		return buyPlantButtonList;
+	}
+
+	public static void setBuyPlantButtonList(ObservableList<BuyPlantButton> buyPlantButtonList) {
+		ShopPane.buyPlantButtonList = buyPlantButtonList;
+	}
+
+	public static int getTimer() {
+		return timer;
+	}
+
+	public static void setTimer(int timer) {
+		ShopPane.timer = timer;
+	}
+	
 }

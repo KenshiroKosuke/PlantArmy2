@@ -50,9 +50,10 @@ public class ControlPane extends Pane {
 			public void handle(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				if (shovel_On == false) {
+					GameController.resetAnyButton();
 					shovel_On = true;
 					System.out.println("shovel_On = true");
-					ShopPane.resetButtonsBackGroundColor();
+					//ShopPane.resetButtonsBackGroundColor();
 					ShopController.setSelectedButton(null); // Deselecting the previous BuyPlantButton if any
 	                Blend greenEffect = new Blend(
 	                    BlendMode.GREEN,
