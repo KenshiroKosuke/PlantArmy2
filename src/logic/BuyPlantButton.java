@@ -37,11 +37,11 @@ public class BuyPlantButton extends Button {
 	public BuyPlantButton(String plantName) {
 		super();
 		switch(plantName) {
-		case "PeaShooter": 		this.plant = new PeaShooter();		this.rechargingTime = 8.0; break;
+		case "PeaShooter": 		this.plant = new PeaShooter();		this.rechargingTime = 10.0; break;
 		case "Sunflower" : 		this.plant = new Sunflower(); 		this.rechargingTime = 10.0; break;
-		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	this.rechargingTime = 18.0; break;
-		case "Repeater": 		this.plant = new Repeater();		this.rechargingTime = 22.0; break;
-		case "Walnut":			this.plant = new Walnut();			this.rechargingTime = 35.0; break;
+		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	this.rechargingTime = 20.0; break;
+		case "Repeater": 		this.plant = new Repeater();		this.rechargingTime = 20.0; break;
+		case "Walnut":			this.plant = new Walnut();			this.rechargingTime = 30.0; break;
 		case "CherryBomb":		this.plant = new CherryBomb(); 		this.rechargingTime = 40.0; break;
 		default			 : 		this.plant = null;					this.rechargingTime = 10.0; break;
 		}

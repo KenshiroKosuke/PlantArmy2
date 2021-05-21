@@ -59,7 +59,6 @@ public class NormalMode extends AnchorPane {
 		gameMusic.setCycleCount(AudioClip.INDEFINITE);
 		gameMusic.play();
 		Thread thread = new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -73,12 +72,10 @@ public class NormalMode extends AnchorPane {
 							zombieComingSound.play();
 							populateZombie(GameController.getWaveType());
 							System.out.println("New wave");
-							System.out.println("Wave "+GameController.getWave()+" type "+GameController.getWaveType());
 						}
 						Random rand = new Random();
 						if(rand.nextDouble()<0.05) {
 							zombieGroanSound.play();
-							System.out.println("groaned");
 						}
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -150,7 +147,6 @@ public class NormalMode extends AnchorPane {
 				};
 			}
 		}
-		System.out.println("From populate : "+GameController.getCurrentZombies().size());
 	}
 	
 	protected void initalizeNewZombie(int code, Zombie zombie) {

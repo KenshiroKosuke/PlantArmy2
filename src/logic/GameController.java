@@ -98,13 +98,6 @@ public class GameController {
 		GameController.getPeaToRemove().clear();
 		GameController.getSunProducers().clear();
 		GameController.setUpgrading(false);
-		waveType = 0;
-		wave = 1;
-		zombieCount = 0;
-		//RESET BUTTON AND SHOPCONTROL BUTTON
-//		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
-//			button.setEffect(null); button.setTime(0); button.setDisable(false); button.setOpacity(1.0);
-//		}
 		
 		ShopController.setSun(ShopController.getInitialSun());
 		ShopController.setSelectedButton(null);
@@ -122,6 +115,10 @@ public class GameController {
 	public static void setGameOver() {
 		endGame();
 		Main.goToGameOverScreen();
+	}
+	
+	public static void setWaveType(int waveType) {
+		GameController.waveType = waveType;
 	}
 	public static ArrayList<SunProducer> getSunProducers() {
 		return sunProducers;

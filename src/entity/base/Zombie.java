@@ -129,10 +129,6 @@ public abstract class Zombie {
 		}
 		zombieDieSound.play();
 		GameController.setKillCount(GameController.getKillCount()+1);
-		System.out.println(GameController.getKillCount());
-		GameController.setZombieCount(GameController.getZombieCount()-1);
-		//System.out.println(GameController.getZombieCount());
-		
 		if (GameController.getCurrentZombies().size() == 1) {
 			System.out.println("new wave from zombie");
 			GameController.getCurrentZombies().remove(this);
