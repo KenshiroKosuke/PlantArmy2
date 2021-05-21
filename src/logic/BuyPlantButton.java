@@ -41,7 +41,7 @@ public class BuyPlantButton extends Button {
 		case "Sunflower" : 		this.plant = new Sunflower(); 		this.rechargingTime = 10.0; break;
 		case "SnowPeaShooter": 	this.plant = new SnowPeaShooter();	this.rechargingTime = 20.0; break;
 		case "Repeater": 		this.plant = new Repeater();		this.rechargingTime = 20.0; break;
-		case "Walnut":			this.plant = new Walnut();			this.rechargingTime = 35.0; break;
+		case "Walnut":			this.plant = new Walnut();			this.rechargingTime = 30.0; break;
 		case "CherryBomb":		this.plant = new CherryBomb(); 		this.rechargingTime = 40.0; break;
 		default			 : 		this.plant = null;					this.rechargingTime = 10.0; break;
 		}
@@ -63,13 +63,11 @@ public class BuyPlantButton extends Button {
 	public void startRechargingTimer() {
 		// TODO Auto-generated method stub
 		ShopController.setSelectedButton(null);
-		System.out.println("start recharging");
 		time = 0;
 		while(!GameController.is_over()) {
 			try {
 				Thread.sleep(1000);
 				time += 1.0;
-				System.out.println("TIME: "+time+"/"+rechargingTime);
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
@@ -79,7 +77,6 @@ public class BuyPlantButton extends Button {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				System.out.println("ERROR IN RECHARGING");
-				e.printStackTrace();
 			}
 			if (time >= rechargingTime || !Main.getPrimaryStage().isShowing()) {
 				this.setEffect(null);

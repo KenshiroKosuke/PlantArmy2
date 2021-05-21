@@ -1,6 +1,8 @@
 package logic;
 
 import application.Main;
+import application.NormalMode;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -15,11 +17,16 @@ import javafx.scene.paint.Color;
 public class UpgradeButton extends Button {
 	
 	private static ImageView view = new ImageView(new Image(ClassLoader.getSystemResource("Button_Upgrade.png").toString()));
+	private static int time=0;
+	private static double rechargingTime = 30;
+	private static Blend rechargeEffect = new Blend(BlendMode.SRC_ATOP, null,new ColorInput(0, 0, 200, 100, Color.BLACK)); 
 	
 	public UpgradeButton() {
 	    view.setFitHeight(60);
 	    view.setPreserveRatio(true);
 	    this.setGraphic(view);
+	    this.setHeight(60);
+	    this.setWidth(BASELINE_OFFSET_SAME_AS_HEIGHT);
 	    //this.setPrefHeight(30);
 	    //this.setMaxHeight(30);
 	    this.setStyle("-fx-background-color: transparent;");
@@ -62,6 +69,31 @@ public class UpgradeButton extends Button {
 		////////////////////////////
 		System.out.println("upgrading = false");
 		////////////////////////////
+	}
+
+	public static void startRechargingTimer() {
+		// TODO Auto-generated method stub
+		ShopController.setSelectedButton(null);
+		System.out.println("start recharging UPGRADE button");
+		time = 0;
+		while(!GameController.is_over()) {
+			try {
+				Thread.sleep(1000);
+				time += 1.0;
+				System.out.println("TIME: "+time+"/"+rechargingTime);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.out.println("ERROR IN RECHARGING");
+				e.printStackTrace();
+			}
+			if (time >= rechargingTime+GameController.getWave()*2 || !Main.getPrimaryStage().isShowing()) {
+				//NormalMode.getShop().getChildren().get(6).setEffect(null);
+				NormalMode.getShop().getChildren().get(6).setVisible(true);
+				NormalMode.getShop().getChildren().get(6).setDisable(false);
+				break;
+			}
+		}
+				
 	}
 	
 }

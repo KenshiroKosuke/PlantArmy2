@@ -9,6 +9,7 @@ import logic.Cell;
 import logic.FieldPane;
 import logic.GameController;
 import logic.ShopController;
+import logic.UpgradeButton;
 
 public class Repeater extends Shooter implements Upgradeable {
 	
@@ -36,6 +37,16 @@ public class Repeater extends Shooter implements Upgradeable {
 			}
 			GameController.getShooters().add((Shooter) cell.getMyPlant());
 			ShopController.setSun(ShopController.getSun()-cell.getMyPlant().getPrice());
+			UpgradeButton.resetUpgradeButton();
+			NormalMode.getShop().getChildren().get(6).setDisable(true);
+			NormalMode.getShop().getChildren().get(6).setVisible(false);
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+					UpgradeButton.startRechargingTimer();
+				}
+			});
+			thread.start();
 		}
 	}
 }

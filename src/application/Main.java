@@ -41,8 +41,11 @@ public class Main extends Application{
 	//private static NormalMode normalMode = new NormalMode();
 	private static Scene normalModeScene;
 	private static Scene gameOverScene;
+	private static Scene gameClearScene;
 	private static AudioClip menuMusic = new AudioClip(ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
 	private static AudioClip gameOverSound = new AudioClip(ClassLoader.getSystemResource("audio/LoseMusic.mp3").toString());
+	private static AudioClip gameClearSound = new AudioClip(ClassLoader.getSystemResource("audio/WinMusic.mp3").toString());
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -55,6 +58,7 @@ public class Main extends Application{
 				NormalMode.getGameMusic().stop();
 				NormalMode.getZombieComingSound().stop();
 				gameOverSound.stop();
+				gameClearSound.stop();
 				Platform.exit();
 		        System.exit(0);
 				//GameController.setGameOver();
@@ -71,32 +75,10 @@ public class Main extends Application{
 		primaryStage.setScene(normalModeScene);
 	}
 	
-	private static void addEventListener(Scene s) {
-		s.setOnKeyPressed((event) -> {
-			KeyCode keycode = event.getCode();
-			switch(keycode) {
-			case N:
-				GameController.setGameMode(0);
-				normalModeScene = new Scene(new NormalMode(), 1024,589);
-				startGame(normalModeScene);
-				break;
-			case H:
-				GameController.setGameMode(1);
-				//startGame(hardModeScene);
-				break;
-			case R:
-				//rule
-				break;
-			case ESCAPE:
-				Platform.exit();
-		        System.exit(0);
-				break;
-			default:
-				System.out.println("Invalid Key.");
-				break;
-			}
-		}
-		);
+	public static void goToNormalModeScene() {
+		GameController.setGameMode(0);
+		normalModeScene = new Scene(new NormalMode(), 1024,589);
+		startGame(normalModeScene);
 	}
 	
 	public static void main(String[] args) {
@@ -106,7 +88,7 @@ public class Main extends Application{
 	public static void startMainMenu() {
 		MainMenu mainMenu = new MainMenu();
 		mainMenuScene = new Scene(mainMenu, WIDTH, HEIGHT);
-		addEventListener(mainMenuScene);	
+		//addEventListener(mainMenuScene);	
 		primaryStage.setResizable(false);
 		primaryStage.setTitle("Plant Army");
 		primaryStage.setScene(mainMenuScene);
@@ -119,6 +101,14 @@ public class Main extends Application{
 		gameOverSound.play();
 		primaryStage.setScene(gameOverScene);
 	}
+	public static void goToGameClearScreen() {
+		NormalMode.getGameMusic().stop();
+		NormalMode.getZombieComingSound().stop();
+		GameClear gameClear = new GameClear();
+		gameClearScene = new Scene(gameClear, WIDTH, HEIGHT);
+		gameClearSound.play();
+		primaryStage.setScene(gameClearScene);
+	}
 	public static int getHeight() {
 		return HEIGHT;
 	}
@@ -126,20 +116,6 @@ public class Main extends Application{
 	public static int getWidth() {
 		return WIDTH;
 	}
-
-	private void drawGameBoard(GraphicsContext gc) {
-		
-		//Draw Background
-		gc.setFill(Color.rgb(21,24,31));
-		gc.fillRect(0, 0, 854, 480);
-		
-		//Draw Playable Field Background
-		gc.setFill(Color.BLACK);
-		
-		int x = 0;
-		int y = 0;
-			
-		}
 
 	public static Scene getNormalModeScene() {
 		return normalModeScene;
@@ -155,6 +131,10 @@ public class Main extends Application{
 
 	public static AudioClip getGameOverSound() {
 		return gameOverSound;
+	}
+
+	public static AudioClip getGameClearSound() {
+		return gameClearSound;
 	}
 
 }

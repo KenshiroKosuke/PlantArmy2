@@ -79,10 +79,9 @@ public class GameController {
 	public static void setPeaToRemove(ArrayList<Pea> peaToRemove) {
 		GameController.peaToRemove = peaToRemove;
 	}
-	public static void setGameOver() {
-		
+	
+	public static void endGame() {
 		is_over = true;
-		
 		//RESET ZOMBIE
 		for (Zombie zombie: CurrentZombies) {
 			zombie.setDead(true);
@@ -99,13 +98,6 @@ public class GameController {
 		GameController.getPeaToRemove().clear();
 		GameController.getSunProducers().clear();
 		GameController.setUpgrading(false);
-		waveType = 0;
-		wave = 1;
-		zombieCount = 0;
-		//RESET BUTTON AND SHOPCONTROL BUTTON
-//		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
-//			button.setEffect(null); button.setTime(0); button.setDisable(false); button.setOpacity(1.0);
-//		}
 		
 		ShopController.setSun(ShopController.getInitialSun());
 		ShopController.setSelectedButton(null);
@@ -113,7 +105,20 @@ public class GameController {
 		System.out.println("From Zombie.java -> GameController.java : "+GameController.getCurrentZombies().size());	
 		ShopController.setSelectedButton(null);
 		
+	}
+	
+	public static void setGameWin() {
+		endGame();
+		Main.goToGameClearScreen();
+	}
+	
+	public static void setGameOver() {
+		endGame();
 		Main.goToGameOverScreen();
+	}
+	
+	public static void setWaveType(int waveType) {
+		GameController.waveType = waveType;
 	}
 	public static ArrayList<SunProducer> getSunProducers() {
 		return sunProducers;
@@ -143,6 +148,7 @@ public class GameController {
 			waveType = 0;
 		else
 			waveType = 1;
+		ControlPane.waveUpdate();
 	}
 	public static int getKillCount() {
 		return killCount;

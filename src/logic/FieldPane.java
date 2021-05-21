@@ -27,8 +27,6 @@ public class FieldPane extends GridPane {
 		this.setWidth(fieldWidth);
 		this.setMinHeight(BASELINE_OFFSET_SAME_AS_HEIGHT);
 		this.setPadding(new Insets(0));
-		this.setBorder(new Border(new BorderStroke(null, BorderStrokeStyle.SOLID, 
-				CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		this.setBackground(new Background(new BackgroundFill(null, null, null)));
 		for (int i=0; i<5; i++) {
 			for (int j=0 ; j<9; j++) {

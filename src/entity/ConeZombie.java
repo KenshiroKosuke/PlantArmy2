@@ -4,7 +4,7 @@ import entity.base.Zombie;
 public class ConeZombie extends Zombie {
 	
 	public ConeZombie() {
-		super(20,1.25,25, "ConeZombie");
+		super(16,1.25,25, "ConeZombie");
 		createSprite();
 	}
 

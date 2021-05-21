@@ -2,21 +2,19 @@ package logic;
 import application.Main;
 import javafx.event.EventHandler;
 import javafx.scene.ImageCursor;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ColorInput;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 public class ControlPane extends Pane {
 
@@ -25,6 +23,7 @@ public class ControlPane extends Pane {
 	private static ImageView imageView_Shovel = new ImageView(new Image(ClassLoader.getSystemResource("Button_Shovel.png").toString()));
 	private static Image IMAGE_ICON_SHOVEL = new Image(ClassLoader.getSystemResource("Icon_Shovel.png").toString());
 	private static Label label_Sun = new Label();
+	private static Text text_Wave = new Text();
 	private static boolean shovel_On = false;
 
 	public ControlPane() {
@@ -32,14 +31,22 @@ public class ControlPane extends Pane {
         imageView_Label_Sun.setPreserveRatio(true);
         imageView_Label_Sun.relocate(0,-10);
         this.getChildren().add(imageView_Label_Sun);
-       
-        label_Sun.relocate(80, 8);
-        label_Sun.setFont(Font.font("Antique Olive Compact", 28));
+        Font sunFont = Font.loadFont(ClassLoader.getSystemResource("font/OLVR93W.TTF").toString(), 28);
+        label_Sun.setFont(sunFont);
         label_Sun.setPrefWidth(120);
         label_Sun.setWrapText(false);
         label_Sun.relocate(80, 8);
         labelSunUpdate();
         this.getChildren().add(label_Sun);
+        
+        Font waveFont = Font.loadFont(ClassLoader.getSystemResource("font/ERASBD.TTF").toString(), 45);
+        text_Wave.setFont(waveFont);
+        text_Wave.setFill(Color.WHITE);
+        text_Wave.setStrokeWidth(3);
+        text_Wave.setStroke(Color.BLACK);
+        text_Wave.relocate(650, 2);
+        waveUpdate();
+        this.getChildren().add(text_Wave);
 
         imageView_Shovel.setFitHeight(HEIGHT-10);
         imageView_Shovel.setPreserveRatio(true);
@@ -82,6 +89,11 @@ public class ControlPane extends Pane {
         this.getChildren().add(imageView_Shovel);
 	}
 	
+	public static void waveUpdate() {
+		// TODO Auto-generated method stub
+		text_Wave.setText("WAVE "+GameController.getWave()+"."+GameController.getWaveType());
+	}
+
 	public void labelSunUpdate() {
 		label_Sun.setText(""+ShopController.getSun());
 		System.out.println("label should be updated");

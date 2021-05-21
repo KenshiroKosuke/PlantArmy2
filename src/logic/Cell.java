@@ -2,6 +2,7 @@ package logic;
 
 import java.util.Random;
 
+import application.NormalMode;
 import entity.CherryBomb;
 import entity.PeaShooter;
 import entity.Repeater;
@@ -63,14 +64,11 @@ public class Cell extends Pane {
 					}
 			});
 		
-		this.setBorder(new Border(new BorderStroke(null, BorderStrokeStyle.SOLID, 
-					CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 	}
-	private void onClickPlanting() {
+	public void onClickPlanting() {
 		if(GameController.isUpgrading()) {
 			if(myPlant instanceof Upgradeable) {
 				((Upgradeable) myPlant).upgrade();
-				UpgradeButton.resetUpgradeButton();
 			}
 		}else {
 			if (ShopController.getSelectedButton() != null) {
