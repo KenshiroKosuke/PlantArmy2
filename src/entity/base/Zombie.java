@@ -49,37 +49,27 @@ public abstract class Zombie {
 
 	private static final Image IMAGE_NORMAL_ZOMBIE = new Image(ClassLoader.getSystemResource("NormalZombie_Idle.gif").toString());
 	private static final Image IMAGE_CONE_ZOMBIE = new Image(ClassLoader.getSystemResource("ConeZombie_Idle.gif").toString());
+	private static final Image IMAGE_BUCKET_ZOMBIE = new Image(ClassLoader.getSystemResource("BucketZombie_Idle.gif").toString());
 	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
 	private static AudioClip eatSound = new AudioClip(ClassLoader.getSystemResource("audio/Eat.mp3").toString());
 	private static AudioClip plantEatenSound = new AudioClip(ClassLoader.getSystemResource("audio/Plant_Eaten.mp3").toString());
 	private static AudioClip zombieDieSound = new AudioClip(ClassLoader.getSystemResource("audio/ZombieDie.mp3").toString());
-	//private static final int COLUMNS  =   12;
-	//private static final int COUNT    = 12;
-	//private static final int OFFSET_X =  0;
-	//private static final int OFFSET_Y =  0;
 	private static final int WIDTH    = 85;
-	//private static final int HEIGHT   = 140;
 	
 	public void createSprite() {
 		if(isDead) {
-			//zombie is now dead
 			imageView.setImage(null);
-			//animation.stop();
-			//dead image
-			//imageView = new ImageView(); 
 		}
 		else {
 			switch(name) {
 			case "NormalZombie" : imageView = new ImageView(IMAGE_NORMAL_ZOMBIE); height=130; break	;
 			case "ConeZombie"	: imageView = new ImageView(IMAGE_CONE_ZOMBIE); height = 160; break	;
+			case "BucketZombie"	: imageView = new ImageView(IMAGE_BUCKET_ZOMBIE); height = 160; break	;
 			default: imageView = new ImageView(IMAGE_NORMAL_ZOMBIE);					;
 			}
 		}
-		//imageView.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
-		//imageView.relocate((double)(getX()), (double)(getY()));
-		
-
 	}
+	
 	public static int getWidth() {
 		return WIDTH;
 	}
@@ -182,7 +172,7 @@ public abstract class Zombie {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 

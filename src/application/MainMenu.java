@@ -83,7 +83,7 @@ public class MainMenu extends AnchorPane{
 			@Override
 			public void handle(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				Main.menuToStart();
+				Main.goToNormalModeScene();
 			}
         });
         

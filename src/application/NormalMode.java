@@ -2,6 +2,7 @@ package application;
 import java.util.ArrayList;
 import java.util.Random;
 
+import entity.BucketZombie;
 import entity.ConeZombie;
 import entity.NormalZombie;
 import entity.base.Pea;
@@ -99,17 +100,19 @@ public class NormalMode extends AnchorPane {
 		//setting the chance of getting rare Zombie
 		switch(GameController.getWave()) {
 		case 1:
-			rare = 0.8; rarer = 1.0; rarest = 2.0;
+			rare = 0.85; rarer = 1.0; rarest = 2.0;
 			break;
 		case 2:
-			rare = 0.7; rarer = 0.92; rarest = 1.0;
+			rare = 0.8; rarer = 0.92; rarest = 1.0;
 			break;
 		case 3:
-			rare = 0.5; rarer = 0.87; rarest = 1.0;
+			rare = 0.67; rarer = 0.87; rarest = 1.0;
 			break;
 		case 4:
-			rare = 0.45; rarer = 0.75; rarest = 1.0;
+			rare = 0.6; rarer = 0.75; rarest = 1.0;
 			break;
+		case 5:
+			rare = 0.34; rarer = 0.68; rarest = 1.0;
 		case 6:
 			Platform.exit();
 	        System.exit(0);
@@ -126,30 +129,31 @@ public class NormalMode extends AnchorPane {
 				NormalZombie zombie = new NormalZombie();
 				initalizeNewZombie(i, zombie);
 				if (waveType == 1)
-					zombie.setHp(30);
+					zombie.setHp(25+GameController.getWave()*5);
 			} else if (special < rarer) {
 				ConeZombie zombie = new ConeZombie();
 				initalizeNewZombie(i, zombie);
 				if (waveType == 1)
-					zombie.setSpeed(4);
+					zombie.setSpeed(zombie.getSpeed()+0.4*GameController.getWave());
 			} else if (special < rarest) {
-				NormalZombie zombie = new NormalZombie();
+				BucketZombie zombie = new BucketZombie();
 				initalizeNewZombie(i, zombie);
 				if (waveType == 1)
-					zombie.setSpeed(3);
+					zombie.setSpeed(zombie.getSpeed()+0.4*GameController.getWave());
 			}
 		}
 		System.out.println("From populate : "+GameController.getCurrentZombies().size());
+		System.out.println("Wave "+GameController.getWave()+"."+GameController.getWaveType());
 	}
 	
 	protected void initalizeNewZombie(int code, Zombie zombie) {
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); //0-4th row from up to the bottom of field 
 		double factor = rand.nextDouble();
-		if (GameController.getWaveType() ==0)
+		if (GameController.getWaveType() ==1)
 			zombie.setX((int) (Main.getWidth()+150+code*240-22*factor*GameController.getWave()));
 		else
-			zombie.setX((int) (Main.getWidth()+550+code*310-(factor-0.3)*code*(-0.4+0.4*GameController.getWave()+GameController.getWaveType())));
+			zombie.setX((int) (Main.getWidth()+350+code*350-(factor-0.4)*code*(-0.4+0.4*GameController.getWave())));
 		if (zombie.getName() ==  "NormalZombie")
 			zombie.setY((int) (35+(row*FieldPane.getFieldHeight())/5));
 		else if (zombie.getName() == "ConeZombie")

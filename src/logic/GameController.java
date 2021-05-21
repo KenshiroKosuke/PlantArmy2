@@ -143,6 +143,7 @@ public class GameController {
 			waveType = 0;
 		else
 			waveType = 1;
+		ControlPane.waveUpdate();
 	}
 	public static int getKillCount() {
 		return killCount;

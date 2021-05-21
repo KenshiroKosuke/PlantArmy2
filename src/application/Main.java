@@ -71,7 +71,7 @@ public class Main extends Application{
 		primaryStage.setScene(normalModeScene);
 	}
 	
-	public static void menuToStart() {
+	public static void goToNormalModeScene() {
 		GameController.setGameMode(0);
 		normalModeScene = new Scene(new NormalMode(), 1024,589);
 		startGame(normalModeScene);
