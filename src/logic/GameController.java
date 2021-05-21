@@ -22,6 +22,7 @@ public class GameController {
 	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
 	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
 	private static boolean isUpgrading = false;
+	private static int killCount;
 	
 	public static int getZombieCount() {
 		return zombieCount;
@@ -101,7 +102,6 @@ public class GameController {
 		waveType = 0;
 		wave = 1;
 		zombieCount = 0;
-		
 		//RESET BUTTON AND SHOPCONTROL BUTTON
 //		for (BuyPlantButton button: ShopPane.getBuyPlantButtonList()) {
 //			button.setEffect(null); button.setTime(0); button.setDisable(false); button.setOpacity(1.0);
@@ -112,7 +112,8 @@ public class GameController {
 		ShopPane.getBuyPlantButtonList().clear();
 		System.out.println("From Zombie.java -> GameController.java : "+GameController.getCurrentZombies().size());	
 		ShopController.setSelectedButton(null);
-		Main.startMainMenu();
+		
+		Main.goToGameOverScreen();
 	}
 	public static ArrayList<SunProducer> getSunProducers() {
 		return sunProducers;
@@ -142,6 +143,12 @@ public class GameController {
 			waveType = 0;
 		else
 			waveType = 1;
+	}
+	public static int getKillCount() {
+		return killCount;
+	}
+	public static void setKillCount(int killCount) {
+		GameController.killCount = killCount;
 	}
 	
 //	public static void changeLevel() {

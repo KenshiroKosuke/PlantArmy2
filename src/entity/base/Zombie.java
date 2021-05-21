@@ -22,8 +22,8 @@ import logic.FieldPane;
 import logic.GameController;
 
 public abstract class Zombie {
-	private int hp, speed, coinDrop, row;
-	private double x,y;
+	private int hp, coinDrop, row;
+	private double x,y,speed;
 	private double height;
 	private String name;
 	private boolean isEating;
@@ -33,7 +33,7 @@ public abstract class Zombie {
 	private boolean exploded;
 	private double frozenFactor;
 	private int freezeTimer;
-	public Zombie(int hp, int speed, int coinDrop, String zombieName) {
+	public Zombie(int hp, double speed, int coinDrop, String zombieName) {
 		this.isDead = false;
 		this.hp = hp;
 		this.speed = speed;
@@ -52,6 +52,7 @@ public abstract class Zombie {
 	private static final Image IMAGE_EXPLODED_ZOMBIE = new Image(ClassLoader.getSystemResource("ExplodedZombie.gif").toString());
 	private static AudioClip eatSound = new AudioClip(ClassLoader.getSystemResource("audio/Eat.mp3").toString());
 	private static AudioClip plantEatenSound = new AudioClip(ClassLoader.getSystemResource("audio/Plant_Eaten.mp3").toString());
+	private static AudioClip zombieDieSound = new AudioClip(ClassLoader.getSystemResource("audio/ZombieDie.mp3").toString());
 	//private static final int COLUMNS  =   12;
 	//private static final int COUNT    = 12;
 	//private static final int OFFSET_X =  0;
@@ -121,8 +122,8 @@ public abstract class Zombie {
 		return 0;
 	}
 	public void damage() {
-		if(getHp()-5>0) {
-			setHp(getHp()-5);
+		if(getHp()-1>0) {
+			setHp(getHp()-1);
 			System.out.println(getHp());
 		}else {
 			zombieKill("normal");
@@ -137,6 +138,9 @@ public abstract class Zombie {
 			setHeight(160);
 			setExploded(true);
 		}
+		zombieDieSound.play();
+		GameController.setKillCount(GameController.getKillCount()+1);
+		System.out.println(GameController.getKillCount());
 		GameController.setZombieCount(GameController.getZombieCount()-1);
 		System.out.println(GameController.getCurrentZombies().size());
 		System.out.println(GameController.getZombieCount());
@@ -174,7 +178,7 @@ public abstract class Zombie {
 		this.height = height;
 	}
 
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
@@ -266,12 +270,11 @@ public abstract class Zombie {
 			@Override
 			public void run() {
 				try {		
-					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead&&!GameController.is_over()) {
-						Thread.sleep(800);
+					while(eatingCell.getMyPlant()!=null&&isEating&&!isDead&&!exploded&&!GameController.is_over()) {
 							if(eatingCell.getMyPlant()!=null) {
 								if(eatingCell.getMyPlant().getHp()>0) {
 									eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 2);
-									eatSound.play(0.4);
+									eatSound.play(0.2);
 									//////////////////////////////////////////////////////////////
 									System.out.println("HP = "+(eatingCell.getMyPlant().getHp()));
 									//////////////////////////////////////////////////////////////
@@ -292,12 +295,13 @@ public abstract class Zombie {
 //									}
 //								}else if(eatingCell.getMyPlant() instanceof SunProducer) {
 //									GameController.getSunProducers().remove((SunProducer) eatingCell.getMyPlant());
-//								}			
-								plantEatenSound.play(0.4);
-								eatingCell.removePlant();
+//								}		
 								isEating=false;
+								eatingCell.removePlant();
+								plantEatenSound.play(0.4);
 								}
 							}
+							Thread.sleep(800);
 					}
 				} catch (InterruptedException e) {
 						// TODO Auto-generated catch block

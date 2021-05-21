@@ -4,10 +4,14 @@ import application.NormalMode;
 import entity.base.Explodable;
 import entity.base.Plant;
 import entity.base.Zombie;
+import javafx.scene.media.AudioClip;
 import logic.FieldPane;
 import logic.GameController;
 import logic.Cell;
 public class CherryBomb extends Plant implements Explodable{
+	private static AudioClip cherryBombSound = new AudioClip(ClassLoader.getSystemResource("audio/CherryBomb.mp3").toString());
+	private static AudioClip prepareExplodeSound = new AudioClip(ClassLoader.getSystemResource("audio/PrepareExplode.mp3").toString());
+
 	public CherryBomb() {
 		super(99999,"CherryBomb");
 	}
@@ -16,13 +20,15 @@ public class CherryBomb extends Plant implements Explodable{
 		// TODO Auto-generated constructor stub
 	}
 	public void explode() {
+		prepareExplodeSound.play();
 		Thread thread = new Thread(new Runnable() {		
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				int row,column;
 				try {
-					Thread.sleep(2200);
+					Thread.sleep(2000);
+					cherryBombSound.play(0.6);
 					for(Zombie zombie:GameController.getCurrentZombies()) {
 						row = zombie.getRow();
 						column = zombie.checkGridXPosition();
@@ -32,6 +38,7 @@ public class CherryBomb extends Plant implements Explodable{
 							}
 						}
 					}
+					Thread.sleep(400);
 					FieldPane fieldPane = NormalMode.getField();
 					Cell cell = (Cell) (fieldPane.getChildren().get(getY()*9+getX()));
 					cell.removePlant();

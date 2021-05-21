@@ -32,6 +32,7 @@ public class NormalMode extends AnchorPane {
 	private static ControlPane control;
 	private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
 	private static AudioClip zombieComingSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Is_coming.wav").toString());
+	private static AudioClip zombieGroanSound = new AudioClip(ClassLoader.getSystemResource("audio/Zombie_Groan.wav").toString());
 	public NormalMode() {
 		String image_path = ClassLoader.getSystemResource("Lawn.png").toString();
 		Image img = new Image(image_path);
@@ -55,7 +56,7 @@ public class NormalMode extends AnchorPane {
 		checkFire();
 		sunTimer();
 		gameMusic.setCycleCount(AudioClip.INDEFINITE);
-		//gameMusic.play();
+		gameMusic.play();
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
@@ -69,6 +70,11 @@ public class NormalMode extends AnchorPane {
 							populateZombie(GameController.getWaveType());
 							System.out.println("New wave");
 							System.out.println("Wave "+GameController.getWave()+" type "+GameController.getWaveType());
+						}
+						Random rand = new Random();
+						if(rand.nextDouble()<0.05) {
+							zombieGroanSound.play();
+							System.out.println("groaned");
 						}
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -238,7 +244,7 @@ public class NormalMode extends AnchorPane {
 					try {
 						Thread.sleep(50);
 						for(Shooter shooter:GameController.getShooters()) {
-							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()) {
+							if(GameController.shouldIShoot(shooter.getX(), shooter.getY())&&!shooter.isShot()&&shooter.getHp()>0) {
 								shooter.startShooting();
 								shooter.setShot(true);
 							}
@@ -276,7 +282,6 @@ public class NormalMode extends AnchorPane {
 		thread.start();		
 	}
 	public void drawPea() {
-		//System.out.println(GameController.getPeaToRemove());
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for(Pea pea: GameController.getPeaToRemove()) {
 			if(pea.isPeaDead()) {
