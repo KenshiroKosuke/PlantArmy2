@@ -3,33 +3,25 @@ package logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 //You might need to do something to the following line
 public class FieldPane extends GridPane {
-	
+
 	private ObservableList<Cell> cells = FXCollections.observableArrayList();
 	private static double fieldHeight = 480;
 	private static double fieldWidth = 750;
-	
-	public FieldPane () {
+
+	public FieldPane() {
 		this.setHeight(fieldHeight);
 		this.setWidth(fieldWidth);
 		this.setMinHeight(BASELINE_OFFSET_SAME_AS_HEIGHT);
 		this.setPadding(new Insets(0));
 		this.setBackground(new Background(new BackgroundFill(null, null, null)));
-		for (int i=0; i<5; i++) {
-			for (int j=0 ; j<9; j++) {
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 9; j++) {
 				Cell cell = new Cell();
 				this.add(cell, j, i, 1, 1);
 				cells.add(cell);
@@ -52,6 +44,5 @@ public class FieldPane extends GridPane {
 	public void setFieldWidth(double fieldWidth) {
 		FieldPane.fieldWidth = fieldWidth;
 	}
-	
 
 }

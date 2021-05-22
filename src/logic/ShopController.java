@@ -1,13 +1,6 @@
 package logic;
 
-import application.Main;
 import application.NormalMode;
-import javafx.application.Platform;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorInput;
-import javafx.scene.effect.Effect;
-import javafx.scene.paint.Color;
 
 public class ShopController {
 	private static final int INITIAL_SUN = 400;
@@ -25,16 +18,16 @@ public class ShopController {
 	public static void setSelectedButton(BuyPlantButton selectedButton) {
 		ShopController.selectedButton = selectedButton;
 	}
-	
+
 	public static void collectSun() {
 		ShopController.sun += 50;
 	}
-	
+
 	public static void boughtPlant() {
-		setSun(sun-ShopController.getSelectedButton().getPlant().getPrice());
+		setSun(sun - ShopController.getSelectedButton().getPlant().getPrice());
 		selectedButton.fillButton(1.0);
 		selectedButton.setDisable(true);
-		Thread thread = new Thread(new Runnable(){
+		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				selectedButton.unhighlight();
@@ -45,13 +38,13 @@ public class ShopController {
 	}
 
 	public static void setSun(int sun) {
-		if(sun<=99999) {
+		if (sun <= 99999) {
 			ShopController.sun = sun;
-		}else {
+		} else {
 			ShopController.sun = 99999;
 		}
 		NormalMode.getControl().labelSunUpdate();
-		
+
 	}
 
 	public static int getInitialSun() {
