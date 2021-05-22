@@ -130,6 +130,7 @@ public class Cell extends Pane {
 
 	public void removePlant() {
 		if (myPlant != null) {
+			//remove plant from related ArrayList in gameController
 			if (myPlant instanceof Shooter) {
 				GameController.removeShooterFromList((Shooter) myPlant);
 				for (Pea pea : ((Shooter) myPlant).getPeaList()) {
@@ -141,6 +142,7 @@ public class Cell extends Pane {
 				int sunTimeLeft = sunTime - ((SunProducer) myPlant).getSunProduceTimer();
 				ArrayList<Sun> suns = ((SunProducer) myPlant).getSunList();
 				if (sunTimeLeft > sunTime / 2) {
+					//thread for removing sun whose sunProducer is removed(by adding it to sunToRemove Arraylist)
 					Thread thread = new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -159,6 +161,7 @@ public class Cell extends Pane {
 					thread.start();
 				}
 			}
+			//remove plant from cell
 			myPlant = null;
 			this.setBackground(null);
 		}

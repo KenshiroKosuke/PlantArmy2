@@ -21,7 +21,6 @@ public class Main extends Application {
 	private static Scene gameOverScene;
 	private static Scene gameClearScene;
 	private static MediaPlayer gameMusic = new MediaPlayer(new Media(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString()));
-	//private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
 	private static AudioClip menuMusic = new AudioClip(
 			ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
 	private static AudioClip gameOverSound = new AudioClip(
@@ -36,6 +35,7 @@ public class Main extends Application {
 
 			@Override
 			public void handle(WindowEvent arg0) {
+				//stops everything when close with X button
 				// TODO Auto-generated method stub
 				GameController.setIs_over(true);
 				menuMusic.stop();

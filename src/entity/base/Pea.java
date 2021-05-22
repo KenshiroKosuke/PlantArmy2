@@ -17,7 +17,7 @@ public class Pea {
 	private int speed;
 	private int x, y;
 	private int startingX;
-	private ImageView PeaImageView;
+	private ImageView peaImageView;
 	private boolean isPeaDead;
 	private int fireRateTimer;
 	private static final Image IMAGE_NORMAL_PEA = new Image(ClassLoader.getSystemResource("Pea.png").toString());
@@ -28,12 +28,12 @@ public class Pea {
 	public Pea(int x, int y, String type) {
 		this.speed = 12;
 		if (type.equals("snow")) {
-			PeaImageView = new ImageView(IMAGE_SNOW_PEA);
+			peaImageView = new ImageView(IMAGE_SNOW_PEA);
 		} else if (type.equals("normal")) {
-			PeaImageView = new ImageView(IMAGE_NORMAL_PEA);
+			peaImageView = new ImageView(IMAGE_NORMAL_PEA);
 		}
-		PeaImageView.setVisible(false);
-		PeaImageView.setDisable(true);
+		peaImageView.setVisible(false);
+		peaImageView.setDisable(true);
 		this.y = (int) ((Main.getHeight() - FieldPane.getFieldHeight()) + (FieldPane.getFieldHeight() * y / 5) - 20);
 		this.startingX = (int) ((Main.getWidth() - FieldPane.getFieldWidth()) + (FieldPane.getFieldWidth() * x / 9)
 				+ 35);
@@ -42,6 +42,7 @@ public class Pea {
 	}
 
 	public boolean checkZombieCollision(Shooter shooter) {
+		//check if pea collided with a zombie
 		boolean collide = false;
 		int zombieLocation;
 		if (!isPeaDead && !GameController.is_over()) {
@@ -66,6 +67,7 @@ public class Pea {
 		return collide;
 	}
 	public void freezeZombie(Zombie zombie) {
+		//freeze zombie+ add freeze effect to image view
 		zombie.setFrozenFactor(1);
 		zombie.setFreezeTimer(0);
 		ColorAdjust monochrome = new ColorAdjust();
@@ -90,7 +92,7 @@ public class Pea {
 	}
 
 	public ImageView getPeaImageView() {
-		return PeaImageView;
+		return peaImageView;
 	}
 
 	public int getY() {
@@ -102,7 +104,7 @@ public class Pea {
 	}
 
 	public void setPeaImageView(ImageView peaImageView) {
-		PeaImageView = peaImageView;
+		this.peaImageView = peaImageView;
 	}
 
 	public boolean isPeaDead() {

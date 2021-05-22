@@ -83,6 +83,7 @@ public abstract class Zombie {
 	}
 
 	public int checkGridXPosition() {
+		//check zombie's column
 		return (int) ((this.x - (Main.getWidth() - FieldPane.getFieldWidth()) + Zombie.WIDTH / 1.25)
 				/ (FieldPane.getFieldWidth() / 9));
 	}
@@ -212,13 +213,13 @@ public abstract class Zombie {
 		// +speed, x, y etc
 		if (!isDead && !GameController.is_over()) {
 			if (CheckPlantCollision() == 1) {
-				// call eat method
+				// call eat method if plant's in the way
 				if (!isEating)
 					eat();
 			} else if (CheckPlantCollision() == 2) {
 				if (((int) (this.x
 						- (Main.getWidth() + this.checkGridXPosition() * FieldPane.getFieldWidth() / 9))) == 0) {
-					// call eat method
+					// call eat method if plant's in the way
 					if (!isEating)
 						eat();
 				} else {
@@ -230,6 +231,7 @@ public abstract class Zombie {
 				isEating = false;
 				this.x -= (this.speed - frozenFactor / 2);
 			}
+			//timer for when to unfreeze zombie
 			if (frozenFactor == 1) {
 				freezeTimer += 1;
 				if (freezeTimer >= 100) {
@@ -257,6 +259,7 @@ public abstract class Zombie {
 							if (eatingCell.getMyPlant().getHp() > 0) {
 								eatingCell.getMyPlant().setHp(eatingCell.getMyPlant().getHp() - 2);
 								eatSound.play(0.2);
+								//change walnut sprite if hp is less than half
 								if (eatingCell.getMyPlant() instanceof Walnut
 										&& eatingCell.getMyPlant().getHp() == 20) {
 									Platform.runLater(new Runnable() {
