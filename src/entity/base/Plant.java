@@ -2,23 +2,48 @@ package entity.base;
 
 public abstract class Plant {
 	private int hp;
-	//private String url;
-	private int x,y;
-	private int price; 
+	private int x, y;
+	private int price;
 	private String name;
-	
+
 	public Plant(int hp, String plantName) {
 		this.hp = hp;
-		switch(plantName) {
-		case "PeaShooter" :		price = 100 ; name ="PeaShooter"; 		break;
-		case "Sunflower" :		price = 50	; name ="Sunflower"; 		break;
-		case "SnowPeaShooter" :	price = 175 ; name ="SnowPeaShooter"; 	break;
-		case "Repeater":		price = 200 ; name ="Repeater";			break;
-		case "Walnut" :			price = 50	; name ="Walnut";			break;
-		case "CherryBomb":		price = 150 ; name ="CherryBomb";		break;
-		case "TwinSunflower":   price = 150 ; name ="TwinSunflower";	break;
-		case "GatlingPea":		price = 250 ; name ="GatlingPea";		break;
-		default : 				name = "Logo"; 	;
+		switch (plantName) {
+		case "PeaShooter":
+			price = 100;
+			name = "PeaShooter";
+			break;
+		case "Sunflower":
+			price = 50;
+			name = "Sunflower";
+			break;
+		case "SnowPeaShooter":
+			price = 175;
+			name = "SnowPeaShooter";
+			break;
+		case "Repeater":
+			price = 200;
+			name = "Repeater";
+			break;
+		case "Walnut":
+			price = 50;
+			name = "Walnut";
+			break;
+		case "CherryBomb":
+			price = 150;
+			name = "CherryBomb";
+			break;
+		case "TwinSunflower":
+			price = 150;
+			name = "TwinSunflower";
+			break;
+		case "GatlingPea":
+			price = 250;
+			name = "GatlingPea";
+			break;
+		default:
+			name = "Logo";
+			;
 		}
 	}
 
@@ -60,8 +85,8 @@ public abstract class Plant {
 
 	public String getUrl() {
 		if (this.name == "Walnut")
-			return name+"_Full.gif";
-		return name+".gif";
+			return name + "_Full.gif";
+		return name + ".gif";
 	}
 
 }
