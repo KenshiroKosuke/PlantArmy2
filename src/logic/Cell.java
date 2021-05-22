@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.ArrayList;
+
 import entity.CherryBomb;
 import entity.PeaShooter;
 import entity.Repeater;
@@ -10,6 +12,7 @@ import entity.base.Explodable;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
+import entity.base.Sun;
 import entity.base.SunProducer;
 import entity.base.Upgradeable;
 import javafx.event.EventHandler;
@@ -126,16 +129,39 @@ public class Cell extends Pane {
 	}
 
 	public void removePlant() {
-		if (myPlant instanceof Shooter) {
-			GameController.removeShooterFromList((Shooter) myPlant);
-			for (Pea pea : ((Shooter) myPlant).getPeaList()) {
-				GameController.getPeaToRemove().add(pea);
+		if (myPlant != null) {
+			if (myPlant instanceof Shooter) {
+				GameController.removeShooterFromList((Shooter) myPlant);
+				for (Pea pea : ((Shooter) myPlant).getPeaList()) {
+					GameController.getPeaToRemove().add(pea);
+				}
+			} else if (myPlant instanceof SunProducer) {
+				GameController.getSunProducers().remove((SunProducer) myPlant);
+				int sunTime = ((SunProducer) myPlant).getSunProduceTime();
+				int sunTimeLeft = sunTime - ((SunProducer) myPlant).getSunProduceTimer();
+				ArrayList<Sun> suns = ((SunProducer) myPlant).getSunList();
+				if (sunTimeLeft > sunTime / 2) {
+					Thread thread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							try {
+								Thread.sleep(1650 * (sunTimeLeft - sunTime / 2));
+								for (Sun sun : suns) {
+									GameController.getSunToRemove().add(sun);
+								}
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					thread.start();
+				}
 			}
-		} else if (myPlant instanceof SunProducer) {
-			GameController.getSunProducers().remove((SunProducer) myPlant);
+			myPlant = null;
+			this.setBackground(null);
 		}
-		myPlant = null;
-		this.setBackground(null);
 	}
 
 	public String getPlantImage() {
