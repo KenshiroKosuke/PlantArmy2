@@ -32,7 +32,6 @@ public class NormalMode extends AnchorPane {
 	private static FieldPane field;
 	private static ShopPane shop;
 	private static ControlPane control;
-	private static AudioClip gameMusic = new AudioClip(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString());
 	private static AudioClip zombieComingSound = new AudioClip(
 			ClassLoader.getSystemResource("audio/Zombie_Is_coming.wav").toString());
 	private static AudioClip zombieGroanSound = new AudioClip(
@@ -60,10 +59,10 @@ public class NormalMode extends AnchorPane {
 		populateZombie(0);
 		zombieComingSound.play();
 		ammoReposition();
+		zombieDrawer();
 		checkFire();
 		sunTimer();
-		gameMusic.setCycleCount(AudioClip.INDEFINITE);
-		gameMusic.play();
+		// Thread for checking for new waves + play zombie related sounds
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -104,10 +103,6 @@ public class NormalMode extends AnchorPane {
 		thread.start();
 	}
 
-	public static AudioClip getGameMusic() {
-		return gameMusic;
-	}
-
 	public void populateZombie(int waveType) {
 		int enemyCount = 4 + 4 * GameController.getWave();
 		double rare = 1.0, rarer = 1.0, rarest = 1.0;
@@ -132,21 +127,20 @@ public class NormalMode extends AnchorPane {
 			System.out.println("Invalid Level.");
 			break;
 		}
-
+		// initializing zombies according to the randomized chance
 		for (int i = 0; i < enemyCount; i++) {
 			double special = rand.nextDouble();
-			System.out.println(i + " " + special);
 			if (special < rare) {
 				NormalZombie zombie = new NormalZombie();
-				initalizeNewZombie(i, zombie);
+				initializeNewZombie(i, zombie);
 				if (GameController.getWave() != 1)
 					zombie.setHp(zombie.getHp() + GameController.getWave());
 				if (waveType == 1) {
-					zombie.setHp(zombie.getHp() + GameController.getWave()*2);
+					zombie.setHp(zombie.getHp() + GameController.getWave() * 2);
 				}
 			} else if (special < rarer) {
 				ConeZombie zombie = new ConeZombie();
-				initalizeNewZombie(i, zombie);
+				initializeNewZombie(i, zombie);
 				if (GameController.getWave() != 1)
 					zombie.setHp(zombie.getHp() + GameController.getWave());
 				if (waveType == 1) {
@@ -154,9 +148,9 @@ public class NormalMode extends AnchorPane {
 				}
 			} else if (special < rarest) {
 				BucketZombie zombie = new BucketZombie();
-				initalizeNewZombie(i, zombie);
+				initializeNewZombie(i, zombie);
 				if (GameController.getWave() != 1)
-					zombie.setHp(zombie.getHp() + GameController.getWave()*2);
+					zombie.setHp(zombie.getHp() + GameController.getWave() * 2);
 				if (waveType == 1) {
 					zombie.setHp(zombie.getHp() + GameController.getWave() * 2);
 				}
@@ -165,20 +159,24 @@ public class NormalMode extends AnchorPane {
 		}
 	}
 
-	protected void initalizeNewZombie(int code, Zombie zombie) {
+	protected void initializeNewZombie(int code, Zombie zombie) {
+		// set zombie position,size, etc
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); // 0-4th row from up to the bottom of field
 		double factor = rand.nextDouble();
 		if (GameController.getWaveType() == 1) {
-			zombie.setX((int) (Main.getWidth() + 20 +0.04*Math.pow(code+3,2) * (200 - GameController.getWave() * 18)));
+			zombie.setX((int) (Main.getWidth() + 20
+					+ 0.04 * Math.pow(code + 3, 2) * (200 - GameController.getWave() * 18)));
 		} else {
 			if (GameController.getWave() == 1) {
-				zombie.setX((int) (Main.getWidth() + 400 + code * 260 - factor * 18 * GameController.getWave())); //wave 1.0 only
+				zombie.setX((int) (Main.getWidth() + 400 + code * 260 - factor * 18 * GameController.getWave())); // wave
+																													// 1.0
+																													// only
 			} else {
-				zombie.setX((int) (Main.getWidth() + 50 +1.1*code * (200 - GameController.getWave() * 25)- 5 * factor * GameController.getWave()));
+				zombie.setX((int) (Main.getWidth() + 50 + 1.1 * code * (200 - GameController.getWave() * 25)
+						- 5 * factor * GameController.getWave()));
 			}
 		}
-		// (GameController.getWave()-3)*
 		if (zombie.getName() == "NormalZombie")
 			zombie.setY((int) (35 + (row * FieldPane.getFieldHeight()) / 5));
 		else if (zombie.getName() == "ConeZombie")
@@ -191,7 +189,6 @@ public class NormalMode extends AnchorPane {
 			@Override
 			public void run() {
 				updateZombieMovement(zombie);
-				killZombie(zombie);
 			}
 		});
 		thread.start();
@@ -206,6 +203,7 @@ public class NormalMode extends AnchorPane {
 					public void run() {
 						try {
 							if (zombie.isExploded()) {
+								// zombie doesn't move and change into the blown up sprite
 								Thread t = new Thread(new Runnable() {
 									public void run() {
 										try {
@@ -235,10 +233,57 @@ public class NormalMode extends AnchorPane {
 					}
 				});
 			}
+			GameController.getZombieToRemove().add(zombie);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println("currentZombies cleared while thread was running");
+		}catch (ConcurrentModificationException e) {
+			updateZombieMovement(zombie);
 		}
+	}
+
+	public void zombieDrawer() {
+		// thread to draw zombie, also get rid of dead zombie
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while (!GameController.is_over()) {
+						for (Zombie zombie : GameController.getCurrentZombies()) {
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									drawZombie(zombie);
+								}
+							});
+						}
+						for (Zombie zombie : GameController.getZombieToRemove()) {
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									ImageView zombieImageView = zombie.getImageView();
+									getChildren().remove(zombieImageView);
+
+								}
+							});
+							GameController.getCurrentZombies().remove(zombie);
+						}
+						GameController.setZombieToRemove(new ArrayList<Zombie>());
+						try {
+							Thread.sleep(50);
+
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				} catch (ConcurrentModificationException e) {
+					zombieDrawer();
+				}
+			}
+		});
+		thread.start();
 	}
 
 	public void drawZombie(Zombie zombie) {
@@ -251,24 +296,12 @@ public class NormalMode extends AnchorPane {
 		this.getChildren().add(zombieImageView);
 	}
 
-	public void killZombie(Zombie zombie) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				ImageView zombieImageView = zombie.getImageView();
-				getChildren().remove(zombieImageView);
-			}
-		});
-		GameController.getCurrentZombies().remove(zombie);
-
-	}
-
 	public static FieldPane getField() {
 		return field;
 	}
 
 	public void checkFire() {
+		// Check if a shooter plant should start shooting or not
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -297,6 +330,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void ammoReposition() {
+		// thread to constantly update pea sprite using drawPea()
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -320,6 +354,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void drawPea() {
+		// update/remove peas whose shooter was removed
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for (Pea pea : GameController.getPeaToRemove()) {
 			if (pea.isPeaDead()) {
@@ -333,6 +368,7 @@ public class NormalMode extends AnchorPane {
 			}
 		}
 		GameController.setPeaToRemove(newPeaToRemove);
+		// update pea positions
 		for (Shooter shooter : GameController.getShooters()) {
 			for (Pea pea : shooter.getPeaList()) {
 				if (!pea.isPeaDead()) {
@@ -347,15 +383,18 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void sunTimer() {
+		// A thread to check when all sunProducer should producce suns.
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (!GameController.is_over()) {
 					try {
 						Thread.sleep(1650);
+
 						for (SunProducer sunProducer : GameController.getSunProducers()) {
 							sunProducer.setSunProduceTimer(sunProducer.getSunProduceTimer() + 1);
 							if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime()) {
+								// produce new sun
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -375,6 +414,7 @@ public class NormalMode extends AnchorPane {
 									}
 								});
 							} else if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime() * 4 / 5) {
+								// change sunProducer into glowing state
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -387,10 +427,10 @@ public class NormalMode extends AnchorPane {
 									}
 								});
 							} else if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime() / 2) {
+								// remove old suns
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
-										sunProducer.produceSun();
 										for (Sun sun : sunProducer.getSunList()) {
 											getChildren().remove(sun.getSunImageView());
 										}
@@ -398,6 +438,7 @@ public class NormalMode extends AnchorPane {
 								});
 							}
 						}
+						removeLeftoverSun();
 
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -407,6 +448,19 @@ public class NormalMode extends AnchorPane {
 			}
 		});
 		thread.start();
+	}
+
+	public void removeLeftoverSun() {
+		// remove suns whose sunProducer was removed
+		for (Sun sun : GameController.getSunToRemove()) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					getChildren().remove(sun.getSunImageView());
+				}
+			});
+		}
+		GameController.setSunToRemove(new ArrayList<Sun>());
 	}
 
 	public static ControlPane getControl() {

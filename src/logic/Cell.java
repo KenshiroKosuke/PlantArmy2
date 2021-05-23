@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.ArrayList;
+
 import entity.CherryBomb;
 import entity.PeaShooter;
 import entity.Repeater;
@@ -10,8 +12,10 @@ import entity.base.Explodable;
 import entity.base.Pea;
 import entity.base.Plant;
 import entity.base.Shooter;
+import entity.base.Sun;
 import entity.base.SunProducer;
 import entity.base.Upgradeable;
+import exception.NotAnEmptyCellException;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -27,7 +31,8 @@ public class Cell extends Pane {
 	private Plant myPlant;
 	private static AudioClip plantSound = new AudioClip(
 			ClassLoader.getSystemResource("audio/Plant_Sound.wav").toString());
-
+	private static AudioClip alertSound = new AudioClip(
+			ClassLoader.getSystemResource("audio/Alert_Sound.mp3").toString());
 	public Cell() {
 		this.setPrefHeight(FieldPane.getFieldHeight() / 5);
 		this.setPrefWidth(FieldPane.getFieldWidth() / 9);
@@ -50,43 +55,51 @@ public class Cell extends Pane {
 				((Upgradeable) myPlant).upgrade();
 			}
 		} else {
-			if (ShopController.getSelectedButton() != null) {
-				Plant selectedPlant = ShopController.getSelectedButton().getPlant();
-				if (myPlant == null) {
-					ShopController.boughtPlant();
-					if (selectedPlant.getName().equals("PeaShooter")) {
-						myPlant = new PeaShooter();
-					} else if (selectedPlant.getName() == "Sunflower") {
-						myPlant = new Sunflower();
-					} else if (selectedPlant.getName() == "SnowPeaShooter") {
-						myPlant = new SnowPeaShooter();
-					} else if (selectedPlant.getName() == "Repeater") {
-						myPlant = new Repeater();
-					} else if (selectedPlant.getName() == "Walnut") {
-						myPlant = new Walnut();
-					} else if (selectedPlant.getName() == "CherryBomb") {
-						myPlant = new CherryBomb();
-					}
-					myPlant.setX(FieldPane.getColumnIndex(this));
-					myPlant.setY(FieldPane.getRowIndex(this));
-					if (myPlant instanceof Shooter) {
-						String type;
-						if (myPlant instanceof SnowPeaShooter) {
-							type = "snow";
-						} else {
-							type = "normal";
+			try {
+				if (ShopController.getSelectedButton() != null) {
+					Plant selectedPlant = ShopController.getSelectedButton().getPlant();
+					if (myPlant == null) {
+						ShopController.boughtPlant();
+						if (selectedPlant.getName().equals("PeaShooter")) {
+							myPlant = new PeaShooter();
+						} else if (selectedPlant.getName() == "Sunflower") {
+							myPlant = new Sunflower();
+						} else if (selectedPlant.getName() == "SnowPeaShooter") {
+							myPlant = new SnowPeaShooter();
+						} else if (selectedPlant.getName() == "Repeater") {
+							myPlant = new Repeater();
+						} else if (selectedPlant.getName() == "Walnut") {
+							myPlant = new Walnut();
+						} else if (selectedPlant.getName() == "CherryBomb") {
+							myPlant = new CherryBomb();
 						}
-						for (int i = 0; i < ((Shooter) myPlant).getAmmo(); i++) {
-							((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(), myPlant.getY(), type));
+						myPlant.setX(FieldPane.getColumnIndex(this));
+						myPlant.setY(FieldPane.getRowIndex(this));
+						if (myPlant instanceof Shooter) {
+							String type;
+							if (myPlant instanceof SnowPeaShooter) {
+								type = "snow";
+							} else {
+								type = "normal";
+							}
+							for (int i = 0; i < ((Shooter) myPlant).getAmmo(); i++) {
+								((Shooter) myPlant).getPeaList().add(new Pea(myPlant.getX(), myPlant.getY(), type));
+							}
+							GameController.getShooters().add((Shooter) myPlant);
+						} else if (myPlant instanceof SunProducer) {
+							GameController.getSunProducers().add((SunProducer) myPlant);
+						} else if (myPlant instanceof Explodable) {
+							((CherryBomb) myPlant).explode();
 						}
-						GameController.getShooters().add((Shooter) myPlant);
-					} else if (myPlant instanceof SunProducer) {
-						GameController.getSunProducers().add((SunProducer) myPlant);
-					} else if (myPlant instanceof Explodable) {
-						((CherryBomb) myPlant).explode();
+						changePlant(myPlant);
+					} else {
+						throw new NotAnEmptyCellException();
 					}
-					changePlant(myPlant);
 				}
+			} catch (NotAnEmptyCellException e) {
+				// TODO Auto-generated catch block
+				System.out.println(e);
+				alertSound.play(0.3);
 			}
 			if (ControlPane.isShovel_On()) {
 				//// remove plant and remove image
@@ -126,16 +139,42 @@ public class Cell extends Pane {
 	}
 
 	public void removePlant() {
-		if (myPlant instanceof Shooter) {
-			GameController.removeShooterFromList((Shooter) myPlant);
-			for (Pea pea : ((Shooter) myPlant).getPeaList()) {
-				GameController.getPeaToRemove().add(pea);
+		if (myPlant != null) {
+			//remove plant from related ArrayList in gameController
+			if (myPlant instanceof Shooter) {
+				GameController.removeShooterFromList((Shooter) myPlant);
+				for (Pea pea : ((Shooter) myPlant).getPeaList()) {
+					GameController.getPeaToRemove().add(pea);
+				}
+			} else if (myPlant instanceof SunProducer) {
+				GameController.getSunProducers().remove((SunProducer) myPlant);
+				int sunTime = ((SunProducer) myPlant).getSunProduceTime();
+				int sunTimeLeft = sunTime - ((SunProducer) myPlant).getSunProduceTimer();
+				ArrayList<Sun> suns = ((SunProducer) myPlant).getSunList();
+				if (sunTimeLeft > sunTime / 2) {
+					//thread for removing sun whose sunProducer is removed(by adding it to sunToRemove Arraylist)
+					Thread thread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							try {
+								Thread.sleep(1650 * (sunTimeLeft - sunTime / 2));
+								for (Sun sun : suns) {
+									GameController.getSunToRemove().add(sun);
+								}
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					thread.start();
+				}
 			}
-		} else if (myPlant instanceof SunProducer) {
-			GameController.getSunProducers().remove((SunProducer) myPlant);
+			//remove plant from cell
+			myPlant = null;
+			this.setBackground(null);
 		}
-		myPlant = null;
-		this.setBackground(null);
 	}
 
 	public String getPlantImage() {

@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 
 public class ShopPane extends GridPane {
 	private static ObservableList<BuyPlantButton> buyPlantButtonList = FXCollections.observableArrayList();
-	private static int timer = 0;
 
 	public ShopPane() {
 		this.setAlignment(Pos.CENTER);
@@ -81,14 +80,6 @@ public class ShopPane extends GridPane {
 
 	public static void setBuyPlantButtonList(ObservableList<BuyPlantButton> buyPlantButtonList) {
 		ShopPane.buyPlantButtonList = buyPlantButtonList;
-	}
-
-	public static int getTimer() {
-		return timer;
-	}
-
-	public static void setTimer(int timer) {
-		ShopPane.timer = timer;
 	}
 
 }

@@ -29,6 +29,7 @@ public abstract class Shooter extends Plant {
 						Thread thread = new Thread(new Runnable() {
 							@Override
 							public void run() {
+								// if shooter isn't dead
 								while (GameController.shouldIShoot(getX(), getY()) && getHp() > 0
 										&& !GameController.is_over()
 										&& GameController.getShooters().contains(getShooter())) {
@@ -46,6 +47,7 @@ public abstract class Shooter extends Plant {
 										e.printStackTrace();
 									}
 								}
+								// after shooter die
 								while (!pea.isPeaDead() && !GameController.is_over()) {
 									try {
 										Thread.sleep(50);
@@ -64,8 +66,13 @@ public abstract class Shooter extends Plant {
 							}
 						});
 						thread.start();
-						pea.getPeaImageView().setVisible(true);
-						pea.getPeaImageView().setDisable(false);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								pea.getPeaImageView().setVisible(true);
+								pea.getPeaImageView().setDisable(false);
+							}
+						});
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e) {
@@ -74,13 +81,6 @@ public abstract class Shooter extends Plant {
 						}
 					}
 				} catch (ConcurrentModificationException e) {
-					// TODO Auto-generated catch block
-//					for (Pea pea : peaList) {
-//						System.out.println("try to reset position");
-//						pea.setX(pea.getStartingX());
-//						pea.setPeaDead(false);
-//					}
-					System.out.println("try to reset npea from Shooter");
 					startShooting();
 				}
 
@@ -105,6 +105,7 @@ public abstract class Shooter extends Plant {
 	}
 
 	public void shoot(Pea pea) {
+		// move pea + check collision
 		if (!pea.isPeaDead()) {
 			if (pea.getX() < Main.getWidth()) {
 				if (pea.checkZombieCollision(this)) {

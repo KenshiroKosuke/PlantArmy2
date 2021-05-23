@@ -2,7 +2,6 @@ package application;
 
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -20,9 +19,9 @@ public class GameClear extends AnchorPane {
 		BackgroundImage[] bgImgA = { bgImg };
 		this.setBackground(new Background(null, bgImgA));
 
-		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		this.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(KeyEvent arg0) {
+			public void handle(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				GameController.setKillCount(0);
 				GameController.setWave(1);

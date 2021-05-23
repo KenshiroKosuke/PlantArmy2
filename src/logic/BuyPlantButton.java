@@ -81,14 +81,14 @@ public class BuyPlantButton extends Button {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						fillButton(1.0 - (time / (rechargingTime+additionTime)));
+						fillButton(1.0 - (time / (rechargingTime + additionTime)));
 					}
 				});
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				System.out.println("ERROR IN RECHARGING");
 			}
-			if (time >= (rechargingTime+additionTime) || !Main.getPrimaryStage().isShowing()) {
+			if (time >= (rechargingTime + additionTime) || !Main.getPrimaryStage().isShowing()) {
 				this.setEffect(null);
 				this.setDisable(false);
 				break;

@@ -24,7 +24,6 @@ public class Sun {
 				SunImageView.setDisable(true);
 				SunImageView.setVisible(false);
 				ShopController.setSun(ShopController.getSun() + 50);
-				System.out.println(ShopController.getSun());
 			}
 		});
 	}

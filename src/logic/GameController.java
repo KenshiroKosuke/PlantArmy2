@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import application.Main;
 import entity.base.Pea;
 import entity.base.Shooter;
+import entity.base.Sun;
 import entity.base.SunProducer;
 import entity.base.Zombie;
 
@@ -15,7 +16,9 @@ public class GameController {
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
 	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
+	private static ArrayList<Zombie> zombieToRemove = new ArrayList<Zombie>();
 	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
+	private static ArrayList<Sun> sunToRemove = new ArrayList<Sun>();
 	private static boolean isUpgrading = false;
 	private static int killCount;
 
@@ -112,7 +115,7 @@ public class GameController {
 	public static void setWaveType(int waveType) {
 		GameController.waveType = waveType;
 	}
-	
+
 	public static int getWaveType() {
 		// TODO Auto-generated method stub
 		return waveType;
@@ -139,7 +142,7 @@ public class GameController {
 		ControlPane.resetShovel();
 		ShopPane.resetButtonsBackGroundColor();
 	}
-	
+
 	public static void changeWaveType() {
 		// TODO Auto-generated method stub
 		if (waveType == 1)
@@ -155,6 +158,22 @@ public class GameController {
 
 	public static void setKillCount(int killCount) {
 		GameController.killCount = killCount;
+	}
+
+	public static ArrayList<Zombie> getZombieToRemove() {
+		return zombieToRemove;
+	}
+
+	public static void setZombieToRemove(ArrayList<Zombie> zombieToRemove) {
+		GameController.zombieToRemove = zombieToRemove;
+	}
+
+	public static ArrayList<Sun> getSunToRemove() {
+		return sunToRemove;
+	}
+
+	public static void setSunToRemove(ArrayList<Sun> sunToRemove) {
+		GameController.sunToRemove = sunToRemove;
 	}
 
 }

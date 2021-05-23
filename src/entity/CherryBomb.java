@@ -2,6 +2,7 @@ package entity;
 
 import java.util.ConcurrentModificationException;
 
+import application.Main;
 import application.NormalMode;
 import entity.base.Explodable;
 import entity.base.Plant;
@@ -54,13 +55,18 @@ public class CherryBomb extends Plant implements Explodable {
 		});
 		thread.start();
 	}
+
 	public void blowUpZombieInArea() {
-		int row, column;
+		int row;
+		double cherryX, cherryLeft, cherryRight;
+		cherryX = Main.getWidth() - FieldPane.getFieldWidth() + getX() * (FieldPane.getFieldWidth() / 9);
+		cherryLeft = cherryX - FieldPane.getFieldWidth() / 9;
+		cherryRight = cherryX + 2 * FieldPane.getFieldWidth() / 9;
 		for (Zombie zombie : GameController.getCurrentZombies()) {
 			row = zombie.getRow();
-			column = zombie.checkGridXPosition();
 			if (row == getY() || row == getY() + 1 || row == getY() - 1) {
-				if (column == getX() || column == getX() + 1 || column == getX() - 1) {
+				if (zombie.getX() + Zombie.getWidth() >= cherryLeft
+						&& zombie.getX() + Zombie.getWidth() / 2 <= cherryRight) {
 					zombie.zombieKill("exploded");
 				}
 			}

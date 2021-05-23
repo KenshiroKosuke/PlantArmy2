@@ -4,8 +4,11 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import logic.GameController;
 
 public class Main extends Application {
@@ -17,8 +20,8 @@ public class Main extends Application {
 	private static Scene normalModeScene;
 	private static Scene gameOverScene;
 	private static Scene gameClearScene;
-	private static AudioClip menuMusic = new AudioClip(
-			ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString());
+	private static MediaPlayer gameMusic = new MediaPlayer(new Media(ClassLoader.getSystemResource("audio/GameBGM.mp3").toString()));
+	private static MediaPlayer menuMusic = new MediaPlayer(new Media(ClassLoader.getSystemResource("audio/MainMenuBGM.mp3").toString()));
 	private static AudioClip gameOverSound = new AudioClip(
 			ClassLoader.getSystemResource("audio/LoseMusic.mp3").toString());
 	private static AudioClip gameClearSound = new AudioClip(
@@ -31,10 +34,11 @@ public class Main extends Application {
 
 			@Override
 			public void handle(WindowEvent arg0) {
+				//stops everything when close with X button
 				// TODO Auto-generated method stub
 				GameController.setIs_over(true);
 				menuMusic.stop();
-				NormalMode.getGameMusic().stop();
+				gameMusic.stop();
 				NormalMode.getZombieComingSound().stop();
 				gameOverSound.stop();
 				gameClearSound.stop();
@@ -42,12 +46,17 @@ public class Main extends Application {
 		});
 		startMainMenu();
 		primaryStage.show();
-		menuMusic.setCycleCount(AudioClip.INDEFINITE);
-		menuMusic.play();
 	}
 
 	public static void startGame(Scene normalModeScene) {
 		menuMusic.stop();
+		gameMusic.setCycleCount(MediaPlayer.INDEFINITE);
+		gameMusic.setOnEndOfMedia(new Runnable() {
+		       public void run() {
+		    	   gameMusic.seek(Duration.ZERO);
+		       }
+		   });
+		gameMusic.play();
 		primaryStage.setScene(normalModeScene);
 	}
 
@@ -63,13 +72,20 @@ public class Main extends Application {
 	public static void startMainMenu() {
 		MainMenu mainMenu = new MainMenu();
 		mainMenuScene = new Scene(mainMenu, WIDTH, HEIGHT);
+		menuMusic.setCycleCount(MediaPlayer.INDEFINITE);
+		menuMusic.setOnEndOfMedia(new Runnable() {
+		       public void run() {
+		    	   gameMusic.seek(Duration.ZERO);
+		       }
+		   });
+		menuMusic.play();
 		primaryStage.setResizable(false);
 		primaryStage.setTitle("Plant Army");
 		primaryStage.setScene(mainMenuScene);
 	}
 
 	public static void goToGameOverScreen() {
-		NormalMode.getGameMusic().stop();
+		gameMusic.stop();
 		NormalMode.getZombieComingSound().stop();
 		GameOver gameOver = new GameOver();
 		gameOverScene = new Scene(gameOver, WIDTH, HEIGHT);
@@ -78,7 +94,7 @@ public class Main extends Application {
 	}
 
 	public static void goToGameClearScreen() {
-		NormalMode.getGameMusic().stop();
+		gameMusic.stop();
 		NormalMode.getZombieComingSound().stop();
 		GameClear gameClear = new GameClear();
 		gameClearScene = new Scene(gameClear, WIDTH, HEIGHT);
