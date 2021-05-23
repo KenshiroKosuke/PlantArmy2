@@ -59,7 +59,6 @@ public class NormalMode extends AnchorPane {
 		populateZombie(0);
 		zombieComingSound.play();
 		ammoReposition();
-		killZombie();
 		checkFire();
 		sunTimer();
 		//Thread for checking for new waves + play zombie related sounds
@@ -189,6 +188,7 @@ public class NormalMode extends AnchorPane {
 			@Override
 			public void run() {
 				updateZombieMovement(zombie);
+				killZombie(zombie);
 			}
 		});
 		thread.start();
@@ -233,7 +233,6 @@ public class NormalMode extends AnchorPane {
 					}
 				});
 			}
-			GameController.getZombieToRemove().add(zombie);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println("currentZombies cleared while thread was running");
@@ -250,35 +249,17 @@ public class NormalMode extends AnchorPane {
 		this.getChildren().add(zombieImageView);
 	}
 
-	public void killZombie() {
-		//clear out zombie sprites in the zombieToRemove ArrayList,also remove them from the currentZombies list
-		Thread thread = new Thread(new Runnable() {
+	public void killZombie(Zombie zombie) {
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				while (!GameController.is_over()) {
-					for (Zombie zombie : GameController.getZombieToRemove()) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								ImageView zombieImageView = zombie.getImageView();
-								getChildren().remove(zombieImageView);
-
-							}
-						});
-						GameController.getCurrentZombies().remove(zombie);
-					}
-					GameController.setZombieToRemove(new ArrayList<Zombie>());
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+				// TODO Auto-generated method stub
+				ImageView zombieImageView = zombie.getImageView();
+				getChildren().remove(zombieImageView);
 			}
 		});
-		thread.start();
+		GameController.getCurrentZombies().remove(zombie);
+
 	}
 
 	public static FieldPane getField() {

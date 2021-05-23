@@ -16,7 +16,6 @@ public class GameController {
 	private static ArrayList<Zombie> CurrentZombies = new ArrayList<Zombie>();
 	private static ArrayList<Shooter> shooters = new ArrayList<Shooter>();
 	private static ArrayList<Pea> peaToRemove = new ArrayList<Pea>();
-	private static ArrayList<Zombie> zombieToRemove = new ArrayList<Zombie>();
 	private static ArrayList<SunProducer> sunProducers = new ArrayList<SunProducer>();
 	private static ArrayList<Sun> sunToRemove = new ArrayList<Sun>();
 	private static boolean isUpgrading = false;
@@ -158,14 +157,6 @@ public class GameController {
 
 	public static void setKillCount(int killCount) {
 		GameController.killCount = killCount;
-	}
-
-	public static ArrayList<Zombie> getZombieToRemove() {
-		return zombieToRemove;
-	}
-
-	public static void setZombieToRemove(ArrayList<Zombie> zombieToRemove) {
-		GameController.zombieToRemove = zombieToRemove;
 	}
 
 	public static ArrayList<Sun> getSunToRemove() {
