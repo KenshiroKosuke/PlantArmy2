@@ -20,6 +20,7 @@ public abstract class Shooter extends Plant {
 	}
 
 	public void startShooting() {
+		System.out.println("shoot");
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -29,50 +30,48 @@ public abstract class Shooter extends Plant {
 						Thread thread = new Thread(new Runnable() {
 							@Override
 							public void run() {
-								// if shooter isn't dead
+								// if shooter/all zombie isn't dead
 								while (GameController.shouldIShoot(getX(), getY()) && getHp() > 0
 										&& !GameController.is_over()
 										&& GameController.getShooters().contains(getShooter())) {
 									manageFireTime(pea);
 									try {
 										Thread.sleep(50);
-										Platform.runLater(new Runnable() {
-											@Override
-											public void run() {
-												shoot(pea);
-											}
-										});
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-								// after shooter die
-								while (!pea.isPeaDead() && !GameController.is_over()) {
-									try {
-										Thread.sleep(50);
-										Platform.runLater(new Runnable() {
-											@Override
-											public void run() {
-												shoot(pea);
-											}
-										});
+										shoot(pea);
+//										Platform.runLater(new Runnable() {
+//											@Override
+//											public void run() {
+//												shoot(pea);
+//											}
+//										});
 									} catch (InterruptedException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 								}
 								setShot(false);
+								// after shooter/all zombie die
+								while (!pea.isPeaDead() && !GameController.is_over()) {
+									try {
+										Thread.sleep(50);
+										shoot(pea);
+//										Platform.runLater(new Runnable() {
+//											@Override
+//											public void run() {
+//												shoot(pea);
+//											}
+//										});
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+ 
 							}
 						});
 						thread.start();
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								pea.getPeaImageView().setVisible(true);
-								pea.getPeaImageView().setDisable(false);
-							}
-						});
+						pea.getPeaImageView().setVisible(true);
+						pea.getPeaImageView().setDisable(false);
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e) {
@@ -83,12 +82,12 @@ public abstract class Shooter extends Plant {
 				} catch (ConcurrentModificationException e) {
 					startShooting();
 				}
-
+ 
 			}
-
+ 
 		});
 		t.start();
-
+ 
 	}
 
 	public void manageFireTime(Pea pea) {
