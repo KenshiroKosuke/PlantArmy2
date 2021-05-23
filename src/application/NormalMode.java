@@ -237,6 +237,8 @@ public class NormalMode extends AnchorPane {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			System.out.println("currentZombies cleared while thread was running");
+		}catch (ConcurrentModificationException e) {
+			updateZombieMovement(zombie);
 		}
 	}
 

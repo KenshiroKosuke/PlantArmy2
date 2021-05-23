@@ -66,8 +66,13 @@ public abstract class Shooter extends Plant {
 							}
 						});
 						thread.start();
-						pea.getPeaImageView().setVisible(true);
-						pea.getPeaImageView().setDisable(false);
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								pea.getPeaImageView().setVisible(true);
+								pea.getPeaImageView().setDisable(false);
+							}
+						});
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e) {
