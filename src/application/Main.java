@@ -30,7 +30,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		System.out.println("a");
 		Main.primaryStage = primaryStage;
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
