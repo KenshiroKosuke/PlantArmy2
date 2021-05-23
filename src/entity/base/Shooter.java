@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
 import application.Main;
-import javafx.application.Platform;
 import logic.GameController;
 
 public abstract class Shooter extends Plant {
@@ -20,7 +19,6 @@ public abstract class Shooter extends Plant {
 	}
 
 	public void startShooting() {
-		System.out.println("shoot");
 		Thread t = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -38,12 +36,6 @@ public abstract class Shooter extends Plant {
 									try {
 										Thread.sleep(50);
 										shoot(pea);
-//										Platform.runLater(new Runnable() {
-//											@Override
-//											public void run() {
-//												shoot(pea);
-//											}
-//										});
 									} catch (InterruptedException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -55,12 +47,6 @@ public abstract class Shooter extends Plant {
 									try {
 										Thread.sleep(50);
 										shoot(pea);
-//										Platform.runLater(new Runnable() {
-//											@Override
-//											public void run() {
-//												shoot(pea);
-//											}
-//										});
 									} catch (InterruptedException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
