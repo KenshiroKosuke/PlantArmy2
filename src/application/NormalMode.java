@@ -240,6 +240,7 @@ public class NormalMode extends AnchorPane {
 		}
 	}
 	public void zombieDrawer() {
+		//thread to draw zombie, also get rid of dead zombie
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
