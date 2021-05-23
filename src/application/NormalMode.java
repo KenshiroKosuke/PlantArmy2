@@ -62,7 +62,7 @@ public class NormalMode extends AnchorPane {
 		zombieDrawer();
 		checkFire();
 		sunTimer();
-		//Thread for checking for new waves + play zombie related sounds
+		// Thread for checking for new waves + play zombie related sounds
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -127,7 +127,7 @@ public class NormalMode extends AnchorPane {
 			System.out.println("Invalid Level.");
 			break;
 		}
-		//initializing zombies according to the randomized chance
+		// initializing zombies according to the randomized chance
 		for (int i = 0; i < enemyCount; i++) {
 			double special = rand.nextDouble();
 			if (special < rare) {
@@ -160,7 +160,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	protected void initalizeNewZombie(int code, Zombie zombie) {
-		//set zombie position,size, etc
+		// set zombie position,size, etc
 		GameController.getCurrentZombies().add(zombie);
 		int row = rand.nextInt(5); // 0-4th row from up to the bottom of field
 		double factor = rand.nextDouble();
@@ -203,7 +203,7 @@ public class NormalMode extends AnchorPane {
 					public void run() {
 						try {
 							if (zombie.isExploded()) {
-								//zombie doesn't move and change into the blown up sprite
+								// zombie doesn't move and change into the blown up sprite
 								Thread t = new Thread(new Runnable() {
 									public void run() {
 										try {
@@ -239,44 +239,51 @@ public class NormalMode extends AnchorPane {
 			System.out.println("currentZombies cleared while thread was running");
 		}
 	}
+
 	public void zombieDrawer() {
-		//thread to draw zombie, also get rid of dead zombie
+		// thread to draw zombie, also get rid of dead zombie
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (!GameController.is_over()) {
-					for(Zombie zombie : GameController.getCurrentZombies()) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								drawZombie(zombie);
-							}
-						});
-					}for (Zombie zombie : GameController.getZombieToRemove()) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								// TODO Auto-generated method stub
-								ImageView zombieImageView = zombie.getImageView();
-								getChildren().remove(zombieImageView);
+				try {
+					while (!GameController.is_over()) {
+						for (Zombie zombie : GameController.getCurrentZombies()) {
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									drawZombie(zombie);
+								}
+							});
+						}
+						for (Zombie zombie : GameController.getZombieToRemove()) {
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									ImageView zombieImageView = zombie.getImageView();
+									getChildren().remove(zombieImageView);
 
-							}
-						});
-						GameController.getCurrentZombies().remove(zombie);
+								}
+							});
+							GameController.getCurrentZombies().remove(zombie);
+						}
+						GameController.setZombieToRemove(new ArrayList<Zombie>());
+						try {
+							Thread.sleep(50);
+
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-					GameController.setZombieToRemove(new ArrayList<Zombie>());
-					try {
-						Thread.sleep(50);
-						
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				} catch (ConcurrentModificationException e) {
+					zombieDrawer();
 				}
 			}
 		});
 		thread.start();
 	}
+
 	public void drawZombie(Zombie zombie) {
 		ImageView zombieImageView = zombie.getImageView();
 		this.getChildren().remove(zombieImageView);
@@ -286,12 +293,13 @@ public class NormalMode extends AnchorPane {
 		zombieImageView.relocate((double) (zombie.getX()), (double) (zombie.getY()));
 		this.getChildren().add(zombieImageView);
 	}
+
 	public static FieldPane getField() {
 		return field;
 	}
 
 	public void checkFire() {
-		//Check if a shooter plant should start shooting or not
+		// Check if a shooter plant should start shooting or not
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -320,7 +328,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void ammoReposition() {
-		//thread to constantly update pea sprite using drawPea() 
+		// thread to constantly update pea sprite using drawPea()
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -344,7 +352,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void drawPea() {
-		//update/remove peas whose shooter was removed 
+		// update/remove peas whose shooter was removed
 		ArrayList<Pea> newPeaToRemove = new ArrayList<Pea>();
 		for (Pea pea : GameController.getPeaToRemove()) {
 			if (pea.isPeaDead()) {
@@ -358,7 +366,7 @@ public class NormalMode extends AnchorPane {
 			}
 		}
 		GameController.setPeaToRemove(newPeaToRemove);
-		//update pea positions
+		// update pea positions
 		for (Shooter shooter : GameController.getShooters()) {
 			for (Pea pea : shooter.getPeaList()) {
 				if (!pea.isPeaDead()) {
@@ -373,7 +381,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void sunTimer() {
-		//A thread to check when all sunProducer should producce suns.
+		// A thread to check when all sunProducer should producce suns.
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -384,7 +392,7 @@ public class NormalMode extends AnchorPane {
 						for (SunProducer sunProducer : GameController.getSunProducers()) {
 							sunProducer.setSunProduceTimer(sunProducer.getSunProduceTimer() + 1);
 							if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime()) {
-								//produce new sun
+								// produce new sun
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -404,7 +412,7 @@ public class NormalMode extends AnchorPane {
 									}
 								});
 							} else if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime() * 4 / 5) {
-								//change sunProducer into glowing state 
+								// change sunProducer into glowing state
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -417,7 +425,7 @@ public class NormalMode extends AnchorPane {
 									}
 								});
 							} else if (sunProducer.getSunProduceTimer() >= sunProducer.getSunProduceTime() / 2) {
-								//remove old suns
+								// remove old suns
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
@@ -441,7 +449,7 @@ public class NormalMode extends AnchorPane {
 	}
 
 	public void removeLeftoverSun() {
-		//remove suns whose sunProducer was removed
+		// remove suns whose sunProducer was removed
 		for (Sun sun : GameController.getSunToRemove()) {
 			Platform.runLater(new Runnable() {
 				@Override
